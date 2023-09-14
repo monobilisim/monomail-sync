@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>imapsync-web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white p-2">
+
+    <!-- Header -->
+    <h1 class="text-4xl font-semibold text-center my-4">imapsync-web</h1>
+
+    <!-- imap sync form -->
+    <div class="container p-4 mx-auto flex border-b-2 border-gray-300 dark:border-gray-700 gap-4">
+        <!-- Source details -->
+        <div class="w-1/2 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
+            <form>
+                <div class="grid gap-4">
+                    <div>
+                        <label for="source_server" class="block font-semibold">Server</label>
+                        <input type="text" id="source_server" name="source_server" placeholder="Source Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+                    <div>
+                        <label for="source_account" class="block font-semibold">Account</label>
+                        <input type="text" id="source_account" name="source_account" placeholder="Source Account" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+                    <div>
+                        <label for="source_password" class="block font-semibold">Password</label>
+                        <input type="password" id="source_password" name="source_password" placeholder="Source Password"
+                            class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <!-- Destination details -->
+        <div class="w-1/2 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Destination Details</h2>
+            <form>
+                <div class="grid gap-4">
+                    <div>
+                        <label for="destination_server" class="block font-semibold">Server</label>
+                        <input type="text" id="destination_server" name="destination_server"
+                            placeholder="Destination Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+                    <div>
+                        <label for="destination_account" class="block font-semibold">Account</label>
+                        <input type="text" id="destination_account" name="destination_account"
+                            placeholder="Destination Account" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+                    <div>
+                        <label for="destination_password" class="block font-semibold">Password</label>
+                        <input type="password" id="destination_password" name="destination_password"
+                            placeholder="Destination Password" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Credential validation and sync buttons -->
+    <div class="container mx-auto flex justify-between p-4">
+        <div>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Validate Credentials
+            </button>
+        </div>
+        <div>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Sync
+            </button>
+        </div>
+    </div>
+
+    <!-- Log output -->
+    <div class="container mx-auto flex px-4">
+        <div class="w-full bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Log Output</h2>
+            <div class="grid gap-4">
+                <div>
+                    <textarea class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" rows="15"
+                        readonly>
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="container mx-auto flex justify-center p-4">
+        <div>
+            <p class="text-center text-gray-500 dark:text-gray-400">imapsync-web</p>
+        </div>
+    </div>
+</body>
