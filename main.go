@@ -23,7 +23,11 @@ var (
 func main() {
 	flag.Parse()
 
-	r := initServer()
+	SetupLogger()
 
-	r.Run(":" + *port)
+	log.Info("Starting server")
+
+	router := initServer()
+
+	router.Run(":" + *port)
 }
