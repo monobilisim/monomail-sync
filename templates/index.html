@@ -23,18 +23,21 @@
                     <div>
                         <label for="source_server" class="block font-semibold">Server</label>
                         <input type="text" id="source_server" name="source_server" placeholder="Source Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.SourceDetails.Server}}">
                     </div>
                     <div>
                         <label for="source_account" class="block font-semibold">Account</label>
                         <input type="text" id="source_account" name="source_account" placeholder="Source Account" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.SourceDetails.Account}}">
                     </div>
                     <div>
                         <label for="source_password" class="block font-semibold">Password</label>
                         <input type="password" id="source_password" name="source_password" placeholder="Source Password"
                             class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.SourceDetails.Password}}">
                     </div>
 
                 </div>
@@ -49,19 +52,22 @@
                         <label for="destination_server" class="block font-semibold">Server</label>
                         <input type="text" id="destination_server" name="destination_server"
                             placeholder="Destination Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.DestinationDetails.Server}}">
                     </div>
                     <div>
                         <label for="destination_account" class="block font-semibold">Account</label>
                         <input type="text" id="destination_account" name="destination_account"
                             placeholder="Destination Account" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.DestinationDetails.Account}}">
                     </div>
                     <div>
                         <label for="destination_password" class="block font-semibold">Password</label>
                         <input type="password" id="destination_password" name="destination_password"
                             placeholder="Destination Password" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required>
+                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
+                            value="{{.DestinationDetails.Password}}">
                     </div>
 
                 </div>
@@ -100,8 +106,6 @@
 
     <!-- Footer -->
     <div class="container mx-auto flex justify-center p-4">
-        <div>
-            <p class="text-center text-gray-500 dark:text-gray-400">imapsync-web</p>
-        </div>
+        <p class="text-center text-gray-500 dark:text-gray-400">imapsync-web</p>
     </div>
 </body>
