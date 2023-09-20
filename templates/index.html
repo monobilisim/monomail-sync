@@ -5,117 +5,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>imapsync-web</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rippleui@1.12.1/dist/css/styles.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.5"
         integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
         crossorigin="anonymous"></script>
 
     <style>
-        #error-notification {
-            transition: all 0.5s ease;
+        body {
+            overflow-x: hidden;
         }
 
-        #error-notification.hidden {
-            transform: translateX(100%);
+        #error-notification {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #error-notification.slide-out {
+            transform: translateX(110%);
         }
     </style>
 
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white p-2">
-
+<body>
     <!-- Header -->
-    <h1 class="text-4xl font-semibold text-center my-4">imapsync-web</h1>
-
-    <!-- imap sync form -->
-    <div class="container p-4 mx-auto flex border-b-2 border-gray-300 dark:border-gray-700 gap-4">
-        <!-- Source details -->
-        <div class="w-1/2 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
-
-            <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
-                <div class="grid gap-4">
-                    <div>
-                        <label for="source_server" class="block font-semibold">Server</label>
-                        <input type="text" id="source_server" name="server" placeholder="Source Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.SourceDetails.Server}}">
-                    </div>
-                    <div>
-                        <label for="source_account" class="block font-semibold">Account</label>
-                        <input type="text" id="source_account" name="account" placeholder="Source Account" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.SourceDetails.Account}}">
-                    </div>
-                    <div>
-                        <label for="source_password" class="block font-semibold">Password</label>
-                        <input type="password" id="source_password" name="password" placeholder="Source Password" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.SourceDetails.Password}}">
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg mt-4">
-                    Validate Credentials
-                </button>
-            </form>
-
+    <!-- <h1 class="text-4xl font-semibold text-center my-4">imapsync-web</h1> -->
+    <div class="navbar bg-backgroundSecondary">
+        <div class="navbar-start font-semibold">
+            <a class="navbar-item">imapsync-web</a>
         </div>
-        <!-- Destination details -->
-        <div class="w-1/2 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Destination Details</h2>
-            <form>
-                <div class="grid gap-4">
-                    <div>
-                        <label for="destination_server" class="block font-semibold">Server</label>
-                        <input type="text" id="destination_server" name="server" placeholder="Destination Server" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.DestinationDetails.Server}}">
-                    </div>
-                    <div>
-                        <label for="destination_account" class="block font-semibold">Account</label>
-                        <input type="text" id="destination_account" name="account" placeholder="Destination Account"
-                            class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.DestinationDetails.Account}}">
-                    </div>
-                    <div>
-                        <label for="destination_password" class="block font-semibold">Password</label>
-                        <input type="password" id="destination_password" name="password"
-                            placeholder="Destination Password" class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" required
-                            value="{{.DestinationDetails.Password}}">
-                    </div>
-                </div>
-            </form>
+        <div class="navbar-end m-0 p-0">
+            <a class="navbar-item m-0" href="https://www.github.com/monobilisim/imapsync-web" target="_blank">
+                <svg class="h-7 w-7" fill="currentColor" stroke="currentColor" viewBox="0 0 64 64"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M32 6C17.641 6 6 17.641 6 32c0 12.277 8.512 22.56 19.955 25.286-.592-.141-1.179-.299-1.755-.479V50.85c0 0-.975.325-2.275.325-3.637 0-5.148-3.245-5.525-4.875-.229-.993-.827-1.934-1.469-2.509-.767-.684-1.126-.686-1.131-.92-.01-.491.658-.471.975-.471 1.625 0 2.857 1.729 3.429 2.623 1.417 2.207 2.938 2.577 3.721 2.577.975 0 1.817-.146 2.397-.426.268-1.888 1.108-3.57 2.478-4.774-6.097-1.219-10.4-4.716-10.4-10.4 0-2.928 1.175-5.619 3.133-7.792C19.333 23.641 19 22.494 19 20.625c0-1.235.086-2.751.65-4.225 0 0 3.708.026 7.205 3.338C28.469 19.268 30.196 19 32 19s3.531.268 5.145.738c3.497-3.312 7.205-3.338 7.205-3.338.567 1.474.65 2.99.65 4.225 0 2.015-.268 3.19-.432 3.697C46.466 26.475 47.6 29.124 47.6 32c0 5.684-4.303 9.181-10.4 10.4 1.628 1.43 2.6 3.513 2.6 5.85v8.557c-.576.181-1.162.338-1.755.479C49.488 54.56 58 44.277 58 32 58 17.641 46.359 6 32 6zM33.813 57.93C33.214 57.972 32.61 58 32 58 32.61 58 33.213 57.971 33.813 57.93zM37.786 57.346c-1.164.265-2.357.451-3.575.554C35.429 57.797 36.622 57.61 37.786 57.346zM32 58c-.61 0-1.214-.028-1.813-.07C30.787 57.971 31.39 58 32 58zM29.788 57.9c-1.217-.103-2.411-.289-3.574-.554C27.378 57.61 28.571 57.797 29.788 57.9z">
+                    </path>
+                </svg>
+            </a>
         </div>
     </div>
 
-    <!-- Credential validation and sync buttons -->
-    <div class="container mx-auto flex justify-between p-4">
-        <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Validate Credentials
-            </button>
+    <!-- imap sync form -->
+    <div class="container p-4 mx-auto flex gap-4 mt-4">
+
+        <!-- Source details -->
+        <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
+            <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
+                <div class="grid gap-4 form-group">
+                    <div class="form-field">
+                        <label for="source_server" class="block font-semibold">Server</label>
+                        <input type="text" id="source_server" name="server" placeholder="Source Server"
+                            class="input max-w-full" required value="{{.SourceDetails.Server}}">
+                    </div>
+                    <div>
+                        <label for="source_account" class="block font-semibold">Account</label>
+                        <input type="text" id="source_account" name="account" placeholder="Source Account"
+                            class="input max-w-full" required value="{{.SourceDetails.Account}}">
+                    </div>
+                    <div>
+                        <label for="source_password" class="block font-semibold">Password</label>
+                        <input type="password" id="source_password" name="password" placeholder="Source Password"
+                            class="input max-w-full" required value="{{.SourceDetails.Password}}">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
+                        Validate Credentials
+                    </button>
+                </div>
+            </form>
         </div>
-        <div id="error-notification" class="hidden bg-red-500 text-white p-2 rounded absolute top-0 right-0 mt-4 mr-4">
-            Error Validating Credentials</div>
-        <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Sync
-            </button>
+        <!-- Destination details -->
+        <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">Destination Details</h2>
+            <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
+                <div class="grid gap-4 form-group">
+                    <div class="form-field">
+                        <label for="source_server" class="block font-semibold">Server</label>
+                        <input type="text" id="source_server" name="server" placeholder="Destination Server"
+                            class="input max-w-full" required value="{{.DestinationDetails.Server}}">
+                    </div>
+                    <div>
+                        <label for="source_account" class="block font-semibold">Account</label>
+                        <input type="text" id="source_account" name="account" placeholder="Destination Account"
+                            class="input max-w-full" required value="{{.DestinationDetails.Account}}">
+                    </div>
+                    <div>
+                        <label for="source_password" class="block font-semibold">Password</label>
+                        <input type="password" id="source_password" name="password" placeholder="Destination Password"
+                            class="input max-w-full" required value="{{.DestinationDetails.Password}}">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
+                        Validate Credentials
+                    </button>
+
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Log output -->
     <div class="container mx-auto flex px-4">
-        <div class="w-full bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Log Output</h2>
+        <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold">Log Output</h2>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                    id="start-sync-btn">Start synchronization</button>
+            </div>
             <div class="grid gap-4">
                 <div>
-                    <textarea class="w-full border-2 border-gray-300 dark:border-gray-700 p-2 rounded-lg
-                            focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 text-black" rows="15"
-                        readonly>
-                    </textarea>
+                    <textarea class="textarea-block textarea" rows="12" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -126,10 +127,44 @@
         <p class="text-center text-gray-500 dark:text-gray-400">imapsync-web</p>
     </div>
 
+    <!-- Error notification -->
+    <div class="alert alert-error max-w-sm absolute top-0 right-0 mt-4 mr-4 cursor-pointer slide-out"
+        id="error-notification">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M24 4C12.96 4 4 12.96 4 24C4 35.04 12.96 44 24 44C35.04 44 44 35.04 44 24C44 12.96 35.04 4 24 4ZM24 26C22.9 26 22 25.1 22 24V16C22 14.9 22.9 14 24 14C25.1 14 26 14.9 26 16V24C26 25.1 25.1 26 24 26ZM26 34H22V30H26V34Z"
+                fill="#E92C2C" />
+        </svg>
+        <div class="flex w-full justify-between">
+            <div class="flex flex-col">
+                <span>Error</span>
+                <span class="text-content2">Long sample text</span>
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M18.3007 5.71C17.9107 5.32 17.2807 5.32 16.8907 5.71L12.0007 10.59L7.1107 5.7C6.7207 5.31 6.0907 5.31 5.7007 5.7C5.3107 6.09 5.3107 6.72 5.7007 7.11L10.5907 12L5.7007 16.89C5.3107 17.28 5.3107 17.91 5.7007 18.3C6.0907 18.69 6.7207 18.69 7.1107 18.3L12.0007 13.41L16.8907 18.3C17.2807 18.69 17.9107 18.69 18.3007 18.3C18.6907 17.91 18.6907 17.28 18.3007 16.89L13.4107 12L18.3007 7.11C18.6807 6.73 18.6807 6.09 18.3007 5.71Z"
+                    fill="#969696" />
+            </svg>
+        </div>
+    </div>
+
     <script>
-        var errorNotification = document.getElementById("error-notification");
-        errorNotification.addEventListener("click", function () {
-            errorNotification.classList.add("hidden");
+        function hideNotification() {
+            var notification = document.getElementById("error-notification");
+            notification.classList.add("slide-out");
+        }
+
+        function attachEventListeners() {
+            var notification = document.getElementById("error-notification");
+            notification.addEventListener("click", hideNotification);
+        }
+
+        document.addEventListener("htmx:afterSwap", function (event) {
+            if (event.detail.target.id === "error-notification") {
+                attachEventListeners();
+            }
         });
+
     </script>
+
 </body>

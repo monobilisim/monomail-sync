@@ -12,12 +12,12 @@ type Credentials struct {
 
 var (
 	port                 = flag.String("port", "8080", "Port to listen on")
-	source_server        = flag.String("source_server", "https://example.com", "Source server")
-	source_account       = flag.String("source_account", "default source account", "Source account")
-	source_password      = flag.String("source_password", "default source password", "Source password")
-	destination_server   = flag.String("destination_server", "https://dest.example.com", "Destination server")
-	destination_account  = flag.String("destination_account", "default destination account", "Destination account")
-	destination_password = flag.String("destination_password", "default destination password", "Destination password")
+	source_server        = flag.String("source_server", "", "Source server")
+	source_account       = flag.String("source_account", "", "Source account")
+	source_password      = flag.String("source_password", "", "Source password")
+	destination_server   = flag.String("destination_server", "", "Destination server")
+	destination_account  = flag.String("destination_account", "", "Destination account")
+	destination_password = flag.String("destination_password", "", "Destination password")
 )
 
 func main() {
