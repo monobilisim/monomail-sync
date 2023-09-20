@@ -11,12 +11,13 @@ func initServer() *gin.Engine {
 	router.LoadHTMLGlob("templates/*")
 
 	router.GET("/", handleRoot)
+	router.GET("/admin", handleAdmin)
 	router.GET("/favicon.ico", func(ctx *gin.Context) {
 		ctx.File("favicon.ico")
 	})
 
 	// API endpoints
-	//router.POST("/api/transfer", handleTransfer)
+	router.GET("/api/queue", handleQueue)
 	router.POST("/api/validate", handleValidate)
 
 	return router
@@ -43,4 +44,8 @@ func handleRoot(ctx *gin.Context) {
 		DestinationDetails: destinationDetails,
 	}
 	ctx.HTML(200, "index.html", data)
+}
+
+func handleAdmin(ctx *gin.Context) {
+	ctx.HTML(200, "admin.html", nil)
 }

@@ -12,6 +12,10 @@
         crossorigin="anonymous"></script>
 
     <style>
+        .hide {
+            display: none;
+        }
+
         body {
             overflow-x: hidden;
         }
@@ -82,17 +86,17 @@
             <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
                 <div class="grid gap-4 form-group">
                     <div class="form-field">
-                        <label for="source_server" class="block font-semibold">Server</label>
+                        <label for="destination_server" class="block font-semibold">Server</label>
                         <input type="text" id="source_server" name="server" placeholder="Destination Server"
                             class="input max-w-full" required value="{{.DestinationDetails.Server}}">
                     </div>
                     <div>
-                        <label for="source_account" class="block font-semibold">Account</label>
+                        <label for="destination_account" class="block font-semibold">Account</label>
                         <input type="text" id="source_account" name="account" placeholder="Destination Account"
                             class="input max-w-full" required value="{{.DestinationDetails.Account}}">
                     </div>
                     <div>
-                        <label for="source_password" class="block font-semibold">Password</label>
+                        <label for="destination_password" class="block font-semibold">Password</label>
                         <input type="password" id="source_password" name="password" placeholder="Destination Password"
                             class="input max-w-full" required value="{{.DestinationDetails.Password}}">
                     </div>
@@ -100,7 +104,6 @@
                         class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
                         Validate Credentials
                     </button>
-
                 </div>
             </form>
         </div>
@@ -152,6 +155,9 @@
         function hideNotification() {
             var notification = document.getElementById("error-notification");
             notification.classList.add("slide-out");
+            setTimeout(function () {
+                notification.classList.add("hide");
+            }, 500);
         }
 
         function attachEventListeners() {

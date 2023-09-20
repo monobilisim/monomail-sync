@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>imapsync-web-admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rippleui@1.12.1/dist/css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.5"
+        integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
+        crossorigin="anonymous"></script>
+
+
+</head>
+
+<!-- Admin Panel for viewing the queue and other stats -->
+
+<body>
+    <!-- Header -->
+    <div class="navbar bg-backgroundSecondary">
+        <div class="navbar-start font-semibold">
+            <a class="navbar-item">imapsync-web Admin Panel</a>
+        </div>
+        <div class="navbar-end m-0 p-0">
+            <a class="navbar-item m-0" href="https://www.github.com/monobilisim/imapsync-web" target="_blank">
+                <svg class="h-7 w-7" fill="currentColor" stroke="currentColor" viewBox="0 0 64 64"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M32 6C17.641 6 6 17.641 6 32c0 12.277 8.512 22.56 19.955 25.286-.592-.141-1.179-.299-1.755-.479V50.85c0 0-.975.325-2.275.325-3.637 0-5.148-3.245-5.525-4.875-.229-.993-.827-1.934-1.469-2.509-.767-.684-1.126-.686-1.131-.92-.01-.491.658-.471.975-.471 1.625 0 2.857 1.729 3.429 2.623 1.417 2.207 2.938 2.577 3.721 2.577.975 0 1.817-.146 2.397-.426.268-1.888 1.108-3.57 2.478-4.774-6.097-1.219-10.4-4.716-10.4-10.4 0-2.928 1.175-5.619 3.133-7.792C19.333 23.641 19 22.494 19 20.625c0-1.235.086-2.751.65-4.225 0 0 3.708.026 7.205 3.338C28.469 19.268 30.196 19 32 19s3.531.268 5.145.738c3.497-3.312 7.205-3.338 7.205-3.338.567 1.474.65 2.99.65 4.225 0 2.015-.268 3.19-.432 3.697C46.466 26.475 47.6 29.124 47.6 32c0 5.684-4.303 9.181-10.4 10.4 1.628 1.43 2.6 3.513 2.6 5.85v8.557c-.576.181-1.162.338-1.755.479C49.488 54.56 58 44.277 58 32 58 17.641 46.359 6 32 6zM33.813 57.93C33.214 57.972 32.61 58 32 58 32.61 58 33.213 57.971 33.813 57.93zM37.786 57.346c-1.164.265-2.357.451-3.575.554C35.429 57.797 36.622 57.61 37.786 57.346zM32 58c-.61 0-1.214-.028-1.813-.07C30.787 57.971 31.39 58 32 58zM29.788 57.9c-1.217-.103-2.411-.289-3.574-.554C27.378 57.61 28.571 57.797 29.788 57.9z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table for showing the queue -->
+    <div class="container p-4 mx-auto flex gap-4">
+        <div class="flex w-full overflow-x-auto flex-col">
+            <h2 class="text-4xl m-2">Queue</h2>
+            <table class="table-hover table-compact table" id="queue-table">
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Server</th>
+                        <th>Account</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody hx-poll="500" hx-get="/api/queue" hx-swap="afterbegin" hx-trigger="every 2s">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
