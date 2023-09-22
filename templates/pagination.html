@@ -1,0 +1,4 @@
+{{range .}}
+<button id="sync{{.Number}}" class="btn {{if .Active}} btn-active {{end}}" hx-get="/api/queuepoll?page={{.Number}}"
+    hx-target="#queue-table" hx-swap="innerHTML transition:true">{{.Number}}</button>
+{{end}}

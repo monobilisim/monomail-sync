@@ -39,7 +39,14 @@
     <div class="container p-4 mx-auto flex gap-4">
         <div class="flex w-full overflow-x-auto flex-col">
             <h2 class="text-4xl m-2">Queue</h2>
-            <table class="table-hover table-compact table" id="queue-table">
+
+            <!-- Page controls -->
+            <div id="pagination" class="pagination m-2" hx-get="/api/pagination?page=1" hx-trigger="load">
+
+            </div>
+
+            <table class="table-hover table-compact table" id="queue-table" hx-get="/api/queue?page=1" hx-trigger="load"
+                hx-target="#table-body" hx-swap-oob="innerHTML transition:true">
                 <thead>
                     <tr>
                         <th>Index</th>
@@ -48,12 +55,38 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody hx-poll="500" hx-get="/api/queue" hx-swap="afterbegin" hx-trigger="every 2s">
+                <tbody id="table-body" hx-get="/api/queue?page=1" hx-swap="innerHTML transition:true"
+                    hx-trigger="every 4s">
 
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+
+        let currentBtnIndex = 1;
+
+        const updateButtons = (buttons) => {
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    buttons.forEach((btn) => {
+                        btn.classList.remove('btn-primary');
+                    });
+                    button.classList.add('btn-primary');
+                    currentBtnIndex = button.id.replace('sync', '');
+                    htmx.ajax('GET', `/api/pagination?page=${currentBtnIndex}`, '#pagination');
+                });
+            });
+        };
+
+        const listener = htmx.on('htmx:afterSwap', (evt) => {
+            const buttons = document.querySelectorAll('.btn');
+            updateButtons(buttons);
+        });
+
+    </script>
+
 </body>
 
 </html>

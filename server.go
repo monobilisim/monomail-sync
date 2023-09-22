@@ -16,8 +16,11 @@ func initServer() *gin.Engine {
 		ctx.File("favicon.ico")
 	})
 
+	initQueue()
 	// API endpoints
 	router.GET("/api/queue", handleQueue)
+	router.GET("/api/queuepoll", handleQueuePoll)
+	router.GET("/api/pagination", handlePagination)
 	router.POST("/api/validate", handleValidate)
 
 	return router
