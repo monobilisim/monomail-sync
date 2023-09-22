@@ -41,9 +41,7 @@
             <h2 class="text-4xl m-2">Queue</h2>
 
             <!-- Page controls -->
-            <div id="pagination" class="pagination m-2" hx-get="/api/pagination?page=1" hx-trigger="load">
-
-            </div>
+            <div id="pagination" class="pagination m-2" hx-get="/api/pagination?page=1" hx-trigger="load"></div>
 
             <table class="table-hover table-compact table" id="queue-table" hx-get="/api/queue?page=1" hx-trigger="load"
                 hx-target="#table-body" hx-swap-oob="innerHTML transition:true">
@@ -65,16 +63,17 @@
 
     <script>
 
-        let currentBtnIndex = 1;
+        let currentBtn = null;
 
         const updateButtons = (buttons) => {
             buttons.forEach((button) => {
                 button.addEventListener('click', () => {
-                    buttons.forEach((btn) => {
-                        btn.classList.remove('btn-primary');
-                    });
+                    if (currentBtn) {
+                        currentBtn.classList.remove('btn-primary');
+                    }
                     button.classList.add('btn-primary');
-                    currentBtnIndex = button.id.replace('sync', '');
+                    currentBtn = button;
+                    let currentBtnIndex = button.id.replace('sync', '');
                     htmx.ajax('GET', `/api/pagination?page=${currentBtnIndex}`, '#pagination');
                 });
             });

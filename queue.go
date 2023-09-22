@@ -2,7 +2,6 @@ package main
 
 import (
 	"container/list"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -10,14 +9,19 @@ import (
 
 type Task struct {
 	ID      int
-	account string
-	server  string
-	status  string
+	Account string
+	Server  string
+	Status  string
 }
 
 type Page struct {
 	Number int
 	Active bool
+}
+
+type PageData struct {
+	Index int
+	Tasks []Task
 }
 
 var queue *list.List
@@ -29,9 +33,9 @@ func initQueue() {
 	for i := 0; i < 140; i++ {
 		task := Task{
 			ID:      i + 1,
-			account: "imap.gmail.com",
-			server:  "jomo",
-			status:  "In progress",
+			Account: "imap.gmail.com",
+			Server:  "jomo",
+			Status:  "In progress",
 		}
 		queue.PushFront(task)
 	}
@@ -40,9 +44,9 @@ func initQueue() {
 func addOneTask() {
 	task := Task{
 		ID:      queue.Len() + 1,
-		account: "imap.gmail.com",
-		server:  "jomo",
-		status:  "In progress",
+		Account: "imap.gmail.com",
+		Server:  "jomo",
+		Status:  "In progress",
 	}
 	queue.PushFront(task)
 }
@@ -63,6 +67,10 @@ func handlePagination(ctx *gin.Context) {
 		endPage = queue.Len() / PageSize
 	}
 
+	if (index <= 2 || index >= endPage-2 || index == endPage || index == endPage-1) && endPage-startPage+1 < 5 && endPage < queue.Len()/PageSize {
+		endPage = startPage + 4
+	}
+
 	for i := startPage; i <= endPage; i++ {
 		pages = append(pages, Page{
 			Number: i,
@@ -73,44 +81,7 @@ func handlePagination(ctx *gin.Context) {
 	ctx.HTML(200, "pagination.html", pages)
 }
 
-// Updates the page number on tbody
 func handleQueuePoll(ctx *gin.Context) {
-	ctx.Header("Content-Type", "text/html; charset=utf-8")
-
-	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
-
-	page := getPageByIndex(index)
-
-	var rows string
-	rows += fmt.Sprintf(`<thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Server</th>
-                        <th>Account</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body" hx-get="/api/queue?page=%d" hx-swap="innerHTML"
-                    hx-trigger="every 4s">`, index)
-
-	for _, task := range page {
-		rows += `<tr>
-					<th>` + strconv.Itoa(task.ID) + `</th>
-					<td>` + task.server + `</td>
-					<td>` + task.account + `</td>
-					<td>
-						<span class="badge badge-outline-warning">` + task.status + `</span>
-					</td>
-				</tr>`
-	}
-
-	rows += `</tbody>`
-
-	ctx.String(200, rows)
-}
-
-// Send only one page
-func handleQueue(ctx *gin.Context) {
 	ctx.Header("Content-Type", "text/html; charset=utf-8")
 	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
 
@@ -119,21 +90,36 @@ func handleQueue(ctx *gin.Context) {
 		return
 	}
 
-	var rows string
+	tasks := getPageByIndex(index)
 
-	page := getPageByIndex(index)
-	for _, task := range page {
-		rows += `<tr>
-					<th>` + strconv.Itoa(task.ID) + `</th>
-					<td>` + task.server + `</td>
-					<td>` + task.account + `</td>
-					<td>
-						<span class="badge badge-outline-warning">` + task.status + `</span>
-					</td>
-				</tr>`
+	data := PageData{
+		Index: index,
+		Tasks: tasks,
 	}
 
-	ctx.String(200, rows)
+	ctx.HTML(200, "tbody.html", data)
+}
+
+// Send only one page
+func handleQueue(ctx *gin.Context) {
+	ctx.Header("Content-Type", "text/html; charset=utf-8")
+	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
+
+	addOneTask()
+
+	if queue.Len() == 0 {
+		ctx.String(200, "")
+		return
+	}
+
+	tasks := getPageByIndex(index)
+
+	data := PageData{
+		Index: index,
+		Tasks: tasks,
+	}
+
+	ctx.HTML(200, "queue.html", data)
 }
 
 func getPageByIndex(index int) []Task {

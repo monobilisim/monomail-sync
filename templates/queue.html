@@ -1,0 +1,10 @@
+{{range .Tasks}}
+<tr>
+    <th>{{.ID}}</th>
+    <td>{{.Server}}</td>
+    <td>{{.Account}}</td>
+    <td>
+        <span class="badge badge-outline-warning">{{.Status}}</span>
+    </td>
+</tr>
+{{end}}
