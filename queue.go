@@ -14,7 +14,7 @@ type Task struct {
 	Status  string
 }
 
-type Page struct {
+type Pagination struct {
 	Number int
 	Active bool
 }
@@ -55,7 +55,7 @@ func addOneTask() {
 func handlePagination(ctx *gin.Context) {
 	ctx.Header("Content-Type", "text/html; charset=utf-8")
 	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
-	pages := []Page{}
+	pages := []Pagination{}
 	startPage := index - 2
 	endPage := index + 2
 
@@ -72,7 +72,7 @@ func handlePagination(ctx *gin.Context) {
 	}
 
 	for i := startPage; i <= endPage; i++ {
-		pages = append(pages, Page{
+		pages = append(pages, Pagination{
 			Number: i,
 			Active: i == index,
 		})
