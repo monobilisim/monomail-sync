@@ -22,6 +22,7 @@ func initServer() *gin.Engine {
 	router.GET("/api/queuepoll", handleQueuePoll)
 	router.GET("/api/pagination", handlePagination)
 	router.POST("/api/validate", handleValidate)
+	router.POST("/api/search", handleSearch)
 
 	return router
 }

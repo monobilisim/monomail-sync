@@ -28,59 +28,6 @@ var queue *list.List
 
 const PageSize = 20
 
-func initQueue() {
-	queue = list.New()
-	for i := 0; i < 140; i++ {
-		task := Task{
-			ID:      i + 1,
-			Account: "imap.gmail.com",
-			Server:  "jomo",
-			Status:  "In progress",
-		}
-		queue.PushFront(task)
-	}
-}
-
-func addOneTask() {
-	task := Task{
-		ID:      queue.Len() + 1,
-		Account: "imap.gmail.com",
-		Server:  "jomo",
-		Status:  "In progress",
-	}
-	queue.PushFront(task)
-}
-
-// Updates pagination buttons
-func handlePagination(ctx *gin.Context) {
-	ctx.Header("Content-Type", "text/html; charset=utf-8")
-	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
-	pages := []Pagination{}
-	startPage := index - 2
-	endPage := index + 2
-
-	if startPage < 1 {
-		startPage = 1
-	}
-
-	if endPage > queue.Len()/PageSize {
-		endPage = queue.Len() / PageSize
-	}
-
-	if (index <= 2 || index >= endPage-2 || index == endPage || index == endPage-1) && endPage-startPage+1 < 5 && endPage < queue.Len()/PageSize {
-		endPage = startPage + 4
-	}
-
-	for i := startPage; i <= endPage; i++ {
-		pages = append(pages, Pagination{
-			Number: i,
-			Active: i == index,
-		})
-	}
-
-	ctx.HTML(200, "pagination.html", pages)
-}
-
 func handleQueuePoll(ctx *gin.Context) {
 	ctx.Header("Content-Type", "text/html; charset=utf-8")
 	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
@@ -134,4 +81,57 @@ func getPageByIndex(index int) []Task {
 	}
 
 	return tasks
+}
+
+func initQueue() {
+	queue = list.New()
+	for i := 0; i < 140; i++ {
+		task := Task{
+			ID:      i + 1,
+			Account: "jomo",
+			Server:  "imap.gmail.com",
+			Status:  "In progress",
+		}
+		queue.PushFront(task)
+	}
+}
+
+func addOneTask() {
+	task := Task{
+		ID:      queue.Len() + 1,
+		Account: "jomo",
+		Server:  "imap.gmail.com",
+		Status:  "In progress",
+	}
+	queue.PushFront(task)
+}
+
+// Updates pagination buttons
+func handlePagination(ctx *gin.Context) {
+	ctx.Header("Content-Type", "text/html; charset=utf-8")
+	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
+	pages := []Pagination{}
+	startPage := index - 2
+	endPage := index + 2
+
+	if startPage < 1 {
+		startPage = 1
+	}
+
+	if endPage > queue.Len()/PageSize {
+		endPage = queue.Len() / PageSize
+	}
+
+	if (index <= 2 || index >= endPage-2 || index == endPage || index == endPage-1) && endPage-startPage+1 < 5 && endPage < queue.Len()/PageSize {
+		endPage = startPage + 4
+	}
+
+	for i := startPage; i <= endPage; i++ {
+		pages = append(pages, Pagination{
+			Number: i,
+			Active: i == index,
+		})
+	}
+
+	ctx.HTML(200, "pagination.html", pages)
 }
