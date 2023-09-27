@@ -2,9 +2,8 @@ package internal
 
 import (
 	"errors"
-	"fmt"
-	"net/smtp"
 
+	"github.com/emersion/go-imap/client"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,11 +38,22 @@ func validateCredentials(creds Credentials) error {
 		return errors.New("password cannot be empty")
 	}
 
-	auth := smtp.PlainAuth("", creds.Account, creds.Password, creds.Server)
-	err := smtp.SendMail(creds.Server+":25", auth, creds.Account, []string{creds.Account}, []byte("test"))
+	c, err := client.DialTLS(creds.Server+":993", nil)
 	if err != nil {
-		return fmt.Errorf("invalid credentials for account: %s", creds.Account)
+		return err
 	}
+	log.Infof("IMAP Connected")
+
+	// Don't forget to logout
+	defer c.Logout()
+
+	// Login
+	if err := c.Login(creds.Account, creds.Password); err != nil {
+		log.Info(c)
+		log.Error(err)
+		return err
+	}
+	log.Infof("User %s Logged in to server %s", creds.Account, creds.Server)
 
 	return nil
 }
