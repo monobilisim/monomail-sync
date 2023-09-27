@@ -56,6 +56,9 @@
     <!-- imap sync form -->
     <div class="container p-4 mx-auto flex gap-4 mt-4">
 
+
+        <!-- TODO: Single form only, use input instead of button, value for text -->
+
         <!-- Source details -->
         <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
@@ -117,13 +120,10 @@
         <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold">Log Output</h2>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-                    id="start-sync-btn">Start synchronization</button>
+                <button class="btn btn-primary" id="start-sync-btn" form="">Start synchronization</button>
             </div>
             <div class="grid gap-4">
-                <div>
-                    <textarea class="textarea-block textarea" rows="12" readonly></textarea>
-                </div>
+                <textarea class="textarea-block textarea" rows="12" readonly></textarea>
             </div>
         </div>
     </div>

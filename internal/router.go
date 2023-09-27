@@ -25,6 +25,7 @@ func InitServer() {
 	router.GET("/api/pagination", handlePagination)
 	router.POST("/api/validate", handleValidate)
 	router.POST("/api/search", handleSearch)
+	router.POST("/api/sync", handleSync)
 
 	log.Info("Server starting on http://localhost:" + *port)
 

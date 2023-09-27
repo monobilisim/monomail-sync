@@ -25,6 +25,7 @@ func handleValidate(ctx *gin.Context) {
 		ctx.HTML(200, "error.html", err.Error())
 		return
 	}
+	ctx.HTML(200, "success.html", creds)
 }
 
 func validateCredentials(creds Credentials) error {
@@ -49,7 +50,6 @@ func validateCredentials(creds Credentials) error {
 
 	// Login
 	if err := c.Login(creds.Account, creds.Password); err != nil {
-		log.Info(c)
 		log.Error(err)
 		return err
 	}
