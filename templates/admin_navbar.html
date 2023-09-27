@@ -3,10 +3,11 @@
         <a class="navbar-item" href="/">imapsync-web Admin Panel</a>
     </div>
 
-    <div class="navbar-center">
-        <input type="text" id="search-input" name="search-input" class="input-ghost-primary input form-control"
-            placeholder="Search" hx-post="/api/search?page=1" hx-trigger="keyup changed delay:250ms, search"
-            hx-target="#table-body" hx-swap="innerHTML transition:true">
+    <div class="navbar-center" x-data="{ searchInput: '' }">
+        <input x-model="searchInput" x-on:input.debounce.500ms="updateHxTrigger()" type="text" id="search-input"
+            name="search-input" class="input-ghost-primary input form-control" placeholder="Search"
+            hx-post="/api/search?page=1" hx-trigger="keyup changed delay:250ms, search" hx-target="#table-body"
+            hx-swap="innerHTML transition:true">
     </div>
 
     <div class="navbar-end m-0 p-0">

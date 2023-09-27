@@ -11,6 +11,8 @@
     <script src="https://unpkg.com/htmx.org@1.9.5"
         integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
         crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
         html,
         .navbar,
@@ -95,7 +97,6 @@
             });
         };
 
-
         const listener = htmx.on('htmx:afterSwap', (evt) => {
             const buttons = document.querySelectorAll('.btn');
             updateButtons(buttons);
@@ -113,9 +114,6 @@
                 htmx.process(table);
             }
         }
-
-        searchInput.addEventListener("input", updateHxTrigger);
-
     </script>
 
 </body>
