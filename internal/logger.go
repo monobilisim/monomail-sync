@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"runtime"
@@ -10,9 +10,9 @@ import (
 
 var log = logrus.New()
 
-func SetupLogger() {
+func SetupLogger(logger *logrus.Logger) {
 
-	log.SetFormatter(&logrus.TextFormatter{
+	logger.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true, // Enable colors in the console output
 		FullTimestamp:   true, // Show full timestamp with date and time
 		TimestampFormat: "2006-01-02 15:04:05",
@@ -24,6 +24,6 @@ func SetupLogger() {
 		},
 	})
 
-	log.SetReportCaller(true)
-	log.SetLevel(logrus.TraceLevel)
+	logger.SetReportCaller(true)
+	logger.SetLevel(logrus.TraceLevel)
 }

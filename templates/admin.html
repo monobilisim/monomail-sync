@@ -101,6 +101,19 @@
             updateButtons(buttons);
         });
 
+        var searchInput = document.getElementById("search-input");
+
+        function updateHxTrigger() {
+            var table = document.getElementById("table-body");
+            if (searchInput.value) {
+                table.removeAttribute("hx-trigger");
+            } else {
+                table.setAttribute("hx-trigger", "every 4s");
+            }
+        }
+
+        searchInput.addEventListener("input", updateHxTrigger);
+
     </script>
 
 </body>

@@ -6,6 +6,7 @@
         <th>Status</th>
     </tr>
 </thead>
-<tbody id="table-body" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}" hx-swap="innerHTML">
+<tbody id="table-body" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
+    hx-swap="innerHTML transition:true" hx-trigger="every 4s">
     {{template "queue.html" .}}
 </tbody>
