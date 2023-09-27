@@ -16,7 +16,7 @@ func handleSearch(ctx *gin.Context) {
 		return
 	}
 
-	results := searchChunk(searchQuery)
+	results := searchInQueue(searchQuery)
 
 	data := PageData{
 		Index: 1,
@@ -28,7 +28,7 @@ func handleSearch(ctx *gin.Context) {
 
 func searchInQueue(searchQuery string) []Task {
 	var results []Task
-	chunkSize := 100                                       // number of tasks to process in each chunk
+	chunkSize := 150                                       // number of tasks to process in each chunk
 	numChunks := (queue.Len() + chunkSize - 1) / chunkSize // round up division
 	chunkResults := make([][]Task, numChunks)
 	var wg sync.WaitGroup
@@ -62,25 +62,6 @@ func searchInQueue(searchQuery string) []Task {
 	wg.Wait()
 	for _, chunkResult := range chunkResults {
 		results = append(results, chunkResult...)
-	}
-	return results
-}
-
-// Fuzzy match each field in the queue
-func searchChunk(searchQuery string) []Task {
-	var results []Task
-	for e := queue.Front(); e != nil; e = e.Next() {
-		task := e.Value.(Task)
-		if fuzzy.Match(searchQuery, strconv.Itoa(task.ID)) ||
-			fuzzy.Match(searchQuery, task.Account) ||
-			fuzzy.Match(searchQuery, task.Server) ||
-			fuzzy.Match(searchQuery, task.Status) {
-			results = append(results, task)
-		}
-
-		if len(results) > 100 {
-			break
-		}
 	}
 	return results
 }

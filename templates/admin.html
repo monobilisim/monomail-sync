@@ -107,8 +107,10 @@
             var table = document.getElementById("table-body");
             if (searchInput.value) {
                 table.removeAttribute("hx-trigger");
+                htmx.process(table);
             } else {
                 table.setAttribute("hx-trigger", "every 4s");
+                htmx.process(table);
             }
         }
 

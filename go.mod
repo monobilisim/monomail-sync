@@ -3,7 +3,6 @@ module imap-sync
 go 1.21.0
 
 require (
-	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/sirupsen/logrus v1.9.3
@@ -37,5 +36,6 @@ require (
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
