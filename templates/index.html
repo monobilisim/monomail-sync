@@ -39,6 +39,9 @@
             <a class="navbar-item">imapsync-web</a>
         </div>
         <div class="navbar-end m-0 p-0">
+
+            {{ template "darkmode.html" . }}
+
             <a class="navbar-item m-0" href="https://www.github.com/monobilisim/imapsync-web" target="_blank">
                 <svg class="h-7 w-7" fill="currentColor" stroke="currentColor" viewBox="0 0 64 64"
                     xmlns="http://www.w3.org/2000/svg">
@@ -170,6 +173,41 @@
                 attachEventListeners();
             }
         });
+
+        var toggleDark = document.getElementById("theme-dark-toggle");
+        var toggleLight = document.getElementById("theme-light-toggle");
+
+        var storedTheme =
+            localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light");
+        if (storedTheme)
+            document.documentElement.setAttribute("data-theme", storedTheme);
+        if (storedTheme === "dark") {
+            toggleDark.classList.add("dropdown-active");
+            toggleLight.classList.remove("dropdown-active");
+        } else {
+            toggleLight.classList.add("dropdown-active");
+            toggleDark.classList.remove("dropdown-active");
+        }
+
+        function darkMode() {
+            document.documentElement.setAttribute("data-theme", "dark");
+            toggleDark.classList.add("dropdown-active");
+            toggleLight.classList.remove("dropdown-active");
+            localStorage.setItem("theme", "dark");
+        }
+
+        function lightMode() {
+            document.documentElement.setAttribute("data-theme", "light");
+            toggleLight.classList.add("dropdown-active");
+            toggleDark.classList.remove("dropdown-active");
+            localStorage.setItem("theme", "light");
+        }
+
+        toggleDark.addEventListener("click", darkMode, false);
+        toggleLight.addEventListener("click", lightMode, false);
 
     </script>
 
