@@ -10,12 +10,12 @@ import (
 )
 
 func handleSync(ctx *gin.Context) {
-	sourceServer := ctx.PostForm("sourceServer")
-	sourceAccount := ctx.PostForm("sourceAccount")
-	sourcePassword := ctx.PostForm("sourcePassword")
-	destinationServer := ctx.PostForm("destinationServer")
-	destinationAccount := ctx.PostForm("destinationAccount")
-	destinationPassword := ctx.PostForm("destinationPassword")
+	sourceServer := ctx.PostForm("source_server")
+	sourceAccount := ctx.PostForm("source_account")
+	sourcePassword := ctx.PostForm("source_password")
+	destinationServer := ctx.PostForm("destination_server")
+	destinationAccount := ctx.PostForm("destination_account")
+	destinationPassword := ctx.PostForm("destination_password")
 
 	sourceDetails := Credentials{
 		Server:   sourceServer,

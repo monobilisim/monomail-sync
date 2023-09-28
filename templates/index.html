@@ -54,73 +54,70 @@
     </div>
 
     <!-- imap sync form -->
-    <div class="container p-4 mx-auto flex gap-4 mt-4">
-
-
-        <!-- TODO: Single form only, use input instead of button, value for text -->
+    <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML"
+        class="container p-4 mx-auto flex gap-4 mt-4" id="credentials_form">
 
         <!-- Source details -->
         <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
-            <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
-                <div class="grid gap-4 form-group">
-                    <div class="form-field">
-                        <label for="source_server" class="block font-semibold">Server</label>
-                        <input type="text" id="source_server" name="server" placeholder="Source Server"
-                            class="input max-w-full" required value="{{.SourceDetails.Server}}">
-                    </div>
-                    <div>
-                        <label for="source_account" class="block font-semibold">Account</label>
-                        <input type="text" id="source_account" name="account" placeholder="Source Account"
-                            class="input max-w-full" required value="{{.SourceDetails.Account}}">
-                    </div>
-                    <div>
-                        <label for="source_password" class="block font-semibold">Password</label>
-                        <input type="password" id="source_password" name="password" placeholder="Source Password"
-                            class="input max-w-full" required value="{{.SourceDetails.Password}}">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
-                        Validate Credentials
-                    </button>
+            <div class="grid gap-4 form-group">
+                <div class="form-field">
+                    <label for="source_server" class="block font-semibold">Server</label>
+                    <input type="text" id="source_server" name="source_server" placeholder="Source Server"
+                        class="input max-w-full" value="{{.SourceDetails.Server}}">
                 </div>
-            </form>
+                <div>
+                    <label for="source_account" class="block font-semibold">Account</label>
+                    <input type="text" id="source_account" name="source_account" placeholder="Source Account"
+                        class="input max-w-full" value="{{.SourceDetails.Account}}">
+                </div>
+                <div>
+                    <label for="source_password" class="block font-semibold">Password</label>
+                    <input type="password" id="source_password" name="source_password" placeholder="Source Password"
+                        class="input max-w-full" value="{{.SourceDetails.Password}}">
+                </div>
+                <input value="Validate Credentials" name="source_creds" type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
+                </input>
+            </div>
         </div>
         <!-- Destination details -->
         <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Destination Details</h2>
-            <form hx-post="/api/validate" hx-target="#error-notification" hx-swap="outerHTML">
-                <div class="grid gap-4 form-group">
-                    <div class="form-field">
-                        <label for="destination_server" class="block font-semibold">Server</label>
-                        <input type="text" id="source_server" name="server" placeholder="Destination Server"
-                            class="input max-w-full" required value="{{.DestinationDetails.Server}}">
-                    </div>
-                    <div>
-                        <label for="destination_account" class="block font-semibold">Account</label>
-                        <input type="text" id="source_account" name="account" placeholder="Destination Account"
-                            class="input max-w-full" required value="{{.DestinationDetails.Account}}">
-                    </div>
-                    <div>
-                        <label for="destination_password" class="block font-semibold">Password</label>
-                        <input type="password" id="source_password" name="password" placeholder="Destination Password"
-                            class="input max-w-full" required value="{{.DestinationDetails.Password}}">
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
-                        Validate Credentials
-                    </button>
+            <div class="grid gap-4 form-group">
+                <div class="form-field">
+                    <label for="destination_server" class="block font-semibold">Server</label>
+                    <input type="text" id="destination_server" name="destination_server"
+                        placeholder="Destination Server" class="input max-w-full"
+                        value="{{.DestinationDetails.Server}}">
                 </div>
-            </form>
+                <div>
+                    <label for="destination_account" class="block font-semibold">Account</label>
+                    <input type="text" id="destination_account" name="destination_account"
+                        placeholder="Destination Account" class="input max-w-full"
+                        value="{{.DestinationDetails.Account}}">
+                </div>
+                <div>
+                    <label for="destination_password" class="block font-semibold">Password</label>
+                    <input type="password" id="destination_password" name="destination_password"
+                        placeholder="Destination Password" class="input max-w-full"
+                        value="{{.DestinationDetails.Password}}">
+                </div>
+                <input value="Validate Credentials" name="destination_creds" type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
+                </input>
+            </div>
         </div>
-    </div>
+    </form>
 
     <!-- Log output -->
     <div class="container mx-auto flex px-4">
         <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold">Log Output</h2>
-                <button class="btn btn-primary" id="start-sync-btn" form="">Start synchronization</button>
+                <input type="submit" class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg"
+                    id="start-sync-btn" name="submit_sync" value="Start synchronization"
+                    form="credentials_form"></input>
             </div>
             <div class="grid gap-4">
                 <textarea class="textarea-block textarea" rows="12" readonly></textarea>

@@ -8,9 +8,29 @@ import (
 )
 
 func handleValidate(ctx *gin.Context) {
-	Server := ctx.PostForm("server")
-	Account := ctx.PostForm("account")
-	Password := ctx.PostForm("password")
+
+	sourceCreds := ctx.PostForm("source_creds")
+	destCreds := ctx.PostForm("destination_creds")
+	submitsync := ctx.PostForm("submit_sync")
+
+	var Server, Account, Password string
+
+	if sourceCreds != "" {
+		Server = ctx.PostForm("source_server")
+		Account = ctx.PostForm("source_account")
+		Password = ctx.PostForm("source_password")
+	}
+
+	if destCreds != "" {
+		Server = ctx.PostForm("destination_server")
+		Account = ctx.PostForm("destination_account")
+		Password = ctx.PostForm("destination_password")
+	}
+
+	if destCreds == "" && sourceCreds == "" && submitsync != "" {
+		handleSync(ctx)
+		return
+	}
 
 	creds := Credentials{
 		Server:   Server,
@@ -45,10 +65,8 @@ func validateCredentials(creds Credentials) error {
 	}
 	log.Infof("IMAP Connected")
 
-	// Don't forget to logout
 	defer c.Logout()
 
-	// Login
 	if err := c.Login(creds.Account, creds.Password); err != nil {
 		log.Error(err)
 		return err
