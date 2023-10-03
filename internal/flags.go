@@ -4,6 +4,8 @@ import "flag"
 
 var (
 	port                 = flag.String("port", "8080", "Port to listen on")
+	admin_name           = flag.String("admin_name", "admin", "Admin username")
+	admin_pass           = flag.String("admin_pass", "admin", "Admin password")
 	source_server        = flag.String("source_server", "", "Source server")
 	source_account       = flag.String("source_account", "", "Source account")
 	source_password      = flag.String("source_password", "", "Source password")
