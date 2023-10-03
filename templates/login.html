@@ -1,65 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <script src="/static/js/tailwind.js"></script>
     <style>
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-      }
-      .container {
-        width: 300px;
-        padding: 16px;
-        background-color: white;
-        margin: 0 auto;
-        margin-top: 100px;
-        border: 1px solid black;
-        border-radius: 4px;
-      }
-      input[type="text"],
-      input[type="password"] {
-        width: 90%;
-        padding: 15px;
-        margin: 5px 0 22px 0;
-        display: inline-block;
-        border: none;
-        background: #f1f1f1;
-      }
-      button {
-        background-color: #4caf50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        opacity: 0.9;
-      }
-      button:hover {
-        opacity: 1;
-      }
+        html,
+        .navbar,
+        body,
+        thead {
+            transition: background-color .5s ease;
+        }
     </style>
-  </head>
-  <body>
-    <form action="/auth/login" method="post" class="container">
-      <label for="uname"><b>Username</b></label>
-      <input
-        type="text"
-        placeholder="Enter Username"
-        name="username"
-        required
-      />
+</head>
 
-      <label for="psw"><b>Password</b></label>
-      <input
-        type="password"
-        placeholder="Enter Password"
-        name="password"
-        required
-      />
+<body>
 
-      <button type="submit">Login</button>
+    {{ template "login_navbar.html" . }}
+
+    <form action="/auth/login" method="post" class="mx-auto flex w-full max-w-sm flex-col gap-6 pt-5">
+        <div class="flex flex-col items-center">
+            <h1 class="text-3xl font-semibold">Sign In</h1>
+            <p class="text-sm">Sign in to access admin panel</p>
+        </div>
+        <div class="form-group">
+            <div class="form-field">
+                <label class="form-label">Username</label>
+                <input name="username" placeholder="Type here" type="text" class="input max-w-full" />
+            </div>
+            <div class="form-field">
+                <label class="form-label">Password</label>
+                <div class="form-control">
+                    <input name="password" placeholder="Type here" type="password" class="input max-w-full" />
+                </div>
+            </div>
+
+            <div class="form-field">
+                <div class="form-control justify-between">
+                    <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">Sign
+                        in</button>
+                </div>
+            </div>
+
+        </div>
     </form>
-  </body>
+
+    <script>
+        var toggleDark = document.getElementById("theme-dark-toggle");
+        var toggleLight = document.getElementById("theme-light-toggle");
+
+        var storedTheme =
+            localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light");
+        if (storedTheme)
+            document.documentElement.setAttribute("data-theme", storedTheme);
+        if (storedTheme === "dark") {
+            toggleDark.classList.add("dropdown-active");
+            toggleLight.classList.remove("dropdown-active");
+        } else {
+            toggleLight.classList.add("dropdown-active");
+            toggleDark.classList.remove("dropdown-active");
+        }
+
+        function darkMode() {
+            document.documentElement.setAttribute("data-theme", "dark");
+            toggleDark.classList.add("dropdown-active");
+            toggleLight.classList.remove("dropdown-active");
+            localStorage.setItem("theme", "dark");
+        }
+
+        function lightMode() {
+            document.documentElement.setAttribute("data-theme", "light");
+            toggleLight.classList.add("dropdown-active");
+            toggleDark.classList.remove("dropdown-active");
+            localStorage.setItem("theme", "light");
+        }
+
+        toggleDark.addEventListener("click", darkMode, false);
+        toggleLight.addEventListener("click", lightMode, false);
+
+
+    </script>
+</body>
+
 </html>
