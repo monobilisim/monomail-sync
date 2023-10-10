@@ -21,5 +21,5 @@ func handleQueuePolling(ctx *gin.Context) {
 		Tasks: tasks,
 	}
 
-	ctx.HTML(200, "tbody.html", data)
+	ctx.HTML(200, "table.html", data)
 }

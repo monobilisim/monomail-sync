@@ -23,7 +23,7 @@ func handleSearch(ctx *gin.Context) {
 		Tasks: results,
 	}
 
-	ctx.HTML(200, "queue.html", data)
+	ctx.HTML(200, "tbody.html", data)
 }
 
 func searchInQueue(searchQuery string) []Task {

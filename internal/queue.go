@@ -29,7 +29,7 @@ func handleQueue(ctx *gin.Context) {
 		Tasks: tasks,
 	}
 
-	ctx.HTML(200, "queue.html", data)
+	ctx.HTML(200, "tbody.html", data)
 }
 
 func getPageByIndex(index int) []Task {

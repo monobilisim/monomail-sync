@@ -1,0 +1,12 @@
+<thead>
+    <tr>
+        <th>Index</th>
+        <th>Server</th>
+        <th>Account</th>
+        <th>Status</th>
+    </tr>
+</thead>
+<tbody id="table-body" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
+    hx-swap="innerHTML transition:true" hx-trigger="every 4s">
+    {{template "tbody.html" .}}
+</tbody>
