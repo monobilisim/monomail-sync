@@ -55,10 +55,12 @@ func initQueue() {
 
 func addOneTask() {
 	task := Task{
-		ID:      queue.Len() + 1,
-		Account: "jomo",
-		Server:  "imap.gmail.com",
-		Status:  "In progress",
+		ID:                 queue.Len() + 1,
+		SourceAccount:      "jomo",
+		SourceServer:       "imap.gmail.com",
+		DestinationAccount: "emin",
+		DestinationServer:  "imap.yandex.com",
+		Status:             "In progress",
 	}
 	queue.PushFront(task)
 }

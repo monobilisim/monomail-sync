@@ -45,8 +45,10 @@ func searchInQueue(searchQuery string) []Task {
 				if j >= start {
 					task := e.Value.(Task)
 					if fuzzy.Match(searchQuery, strconv.Itoa(task.ID)) ||
-						fuzzy.Match(searchQuery, task.Account) ||
-						fuzzy.Match(searchQuery, task.Server) ||
+						fuzzy.Match(searchQuery, task.SourceAccount) ||
+						fuzzy.Match(searchQuery, task.SourceServer) ||
+						fuzzy.Match(searchQuery, task.DestinationAccount) ||
+						fuzzy.Match(searchQuery, task.DestinationServer) ||
 						fuzzy.Match(searchQuery, task.Status) {
 						chunkResults[i] = append(chunkResults[i], task)
 					}
@@ -62,6 +64,10 @@ func searchInQueue(searchQuery string) []Task {
 	wg.Wait()
 	for _, chunkResult := range chunkResults {
 		results = append(results, chunkResult...)
+		if len(results) > 150 {
+			break
+		}
 	}
+
 	return results
 }

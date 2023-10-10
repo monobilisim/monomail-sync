@@ -1,8 +1,10 @@
 {{range .Tasks}}
 <tr hx-trigger="none">
     <th>{{.ID}}</th>
-    <td>{{.Server}}</td>
-    <td>{{.Account}}</td>
+    <td>{{.SourceServer}}</td>
+    <td>{{.SourceAccount}}</td>
+    <td>{{.DestinationServer}}</td>
+    <td>{{.DestinationAccount}}</td>
     <td>
         <span class="badge badge-outline-warning">{{.Status}}</span>
     </td>
