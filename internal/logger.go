@@ -13,7 +13,7 @@ var log = Log
 
 func SetupLogger() {
 
-	log.SetFormatter(&logrus.TextFormatter{
+	Log.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true, // Enable colors in the console output
 		FullTimestamp:   true, // Show full timestamp with date and time
 		TimestampFormat: "2006-01-02 15:04:05",
@@ -25,6 +25,6 @@ func SetupLogger() {
 		},
 	})
 
-	log.SetReportCaller(true)
-	log.SetLevel(logrus.TraceLevel)
+	Log.SetReportCaller(true)
+	Log.SetLevel(logrus.TraceLevel)
 }

@@ -6,7 +6,11 @@
     <td>{{.DestinationServer}}</td>
     <td>{{.DestinationAccount}}</td>
     <td>
+        {{if eq .Status "Done"}}
+        <span class="badge badge-outline-success">{{.Status}}</span>
+        {{else}}
         <span class="badge badge-outline-warning">{{.Status}}</span>
+        {{end}}
     </td>
 </tr>
 {{end}}

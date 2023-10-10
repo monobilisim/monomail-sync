@@ -12,5 +12,7 @@ func GetPollingData(index int) PageData {
 		Tasks: tasks,
 	}
 
+	// addOneTask()
+
 	return data
 }

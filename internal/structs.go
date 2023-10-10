@@ -13,5 +13,5 @@ type Task struct {
 
 type PageData struct {
 	Index int
-	Tasks []Task
+	Tasks []*Task
 }

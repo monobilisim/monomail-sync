@@ -17,11 +17,11 @@ func GetSearchData(searchQuery string) PageData {
 	return data
 }
 
-func searchInQueue(searchQuery string) []Task {
-	var results []Task
+func searchInQueue(searchQuery string) []*Task {
+	var results []*Task
 	chunkSize := 150                                       // number of tasks to process in each chunk
 	numChunks := (queue.Len() + chunkSize - 1) / chunkSize // round up division
-	chunkResults := make([][]Task, numChunks)
+	chunkResults := make([][]*Task, numChunks)
 	var wg sync.WaitGroup
 	for i := 0; i < numChunks; i++ {
 		wg.Add(1)
@@ -34,7 +34,7 @@ func searchInQueue(searchQuery string) []Task {
 			}
 			for j, e := 0, queue.Front(); j < end && e != nil; j, e = j+1, e.Next() {
 				if j >= start {
-					task := e.Value.(Task)
+					task := e.Value.(*Task)
 					if fuzzy.Match(searchQuery, strconv.Itoa(task.ID)) ||
 						fuzzy.Match(searchQuery, task.SourceAccount) ||
 						fuzzy.Match(searchQuery, task.SourceServer) ||

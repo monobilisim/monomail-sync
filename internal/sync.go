@@ -7,7 +7,7 @@ import (
 	"os/exec"
 )
 
-func syncIMAP(details Task) error {
+func syncIMAP(details *Task) error {
 
 	cmd := exec.Command("imapsync", "--host1", details.SourceServer, "--user1", details.SourceAccount, "--password1", details.SourcePassword, "--host2", details.DestinationServer, "--user2", details.DestinationAccount, "--password2", details.DestinationPassword)
 	var stdBuffer bytes.Buffer
@@ -22,6 +22,8 @@ func syncIMAP(details Task) error {
 
 	// Command output realtime
 	// log.Println(stdBuffer.String())
+
+	details.Status = "Done"
 
 	return nil
 }
