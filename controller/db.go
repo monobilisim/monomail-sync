@@ -1,13 +1,22 @@
-package internal
+package controller
 
 import (
 	"database/sql"
 	"errors"
+	"flag"
 	"fmt"
+	"imap-sync/internal"
 	"reflect"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
+)
+
+var log = internal.Log
+
+var (
+	admin_name = flag.String("admin_name", "admin", "Admin username")
+	admin_pass = flag.String("admin_pass", "admin", "Admin password")
 )
 
 var db *sql.DB

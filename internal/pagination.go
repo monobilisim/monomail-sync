@@ -1,14 +1,11 @@
 package internal
 
-import (
-	"strconv"
+type Pagination struct {
+	Number int
+	Active bool
+}
 
-	"github.com/gin-gonic/gin"
-)
-
-// Updates pagination buttons
-func handlePagination(ctx *gin.Context) {
-	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
+func GetPagination(index int) []Pagination {
 	pages := []Pagination{}
 	startPage := index - 2
 	endPage := index + 2
@@ -31,6 +28,5 @@ func handlePagination(ctx *gin.Context) {
 			Active: i == index,
 		})
 	}
-
-	ctx.HTML(200, "pagination.html", pages)
+	return pages
 }

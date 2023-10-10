@@ -8,11 +8,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var log = logrus.New()
+var Log = logrus.New()
+var log = Log
 
-func SetupLogger(logger *logrus.Logger) {
+func SetupLogger() {
 
-	logger.SetFormatter(&logrus.TextFormatter{
+	log.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true, // Enable colors in the console output
 		FullTimestamp:   true, // Show full timestamp with date and time
 		TimestampFormat: "2006-01-02 15:04:05",
@@ -24,6 +25,6 @@ func SetupLogger(logger *logrus.Logger) {
 		},
 	})
 
-	logger.SetReportCaller(true)
-	logger.SetLevel(logrus.TraceLevel)
+	log.SetReportCaller(true)
+	log.SetLevel(logrus.TraceLevel)
 }

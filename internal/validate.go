@@ -4,51 +4,9 @@ import (
 	"errors"
 
 	"github.com/emersion/go-imap/client"
-	"github.com/gin-gonic/gin"
 )
 
-func handleValidate(ctx *gin.Context) {
-
-	sourceCreds := ctx.PostForm("source_creds")
-	destCreds := ctx.PostForm("destination_creds")
-	submitsync := ctx.PostForm("submit_sync")
-
-	var Server, Account, Password string
-
-	if sourceCreds != "" {
-		Server = ctx.PostForm("source_server")
-		Account = ctx.PostForm("source_account")
-		Password = ctx.PostForm("source_password")
-	}
-
-	if destCreds != "" {
-		Server = ctx.PostForm("destination_server")
-		Account = ctx.PostForm("destination_account")
-		Password = ctx.PostForm("destination_password")
-	}
-
-	if destCreds == "" && sourceCreds == "" && submitsync != "" {
-		handleSync(ctx)
-		return
-	}
-
-	creds := Credentials{
-		Server:   Server,
-		Account:  Account,
-		Password: Password,
-	}
-
-	log.Infof("Validating credentials for: %s", creds.Account)
-
-	err := validateCredentials(creds)
-	if err != nil {
-		ctx.HTML(200, "error.html", err.Error())
-		return
-	}
-	ctx.HTML(200, "success.html", creds)
-}
-
-func validateCredentials(creds Credentials) error {
+func ValidateCredentials(creds Credentials) error {
 	if creds.Server == "" {
 		return errors.New("server cannot be empty")
 	}

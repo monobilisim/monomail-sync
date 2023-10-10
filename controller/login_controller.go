@@ -1,4 +1,4 @@
-package internal
+package controller
 
 import (
 	"net/http"
@@ -8,12 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type user struct {
-	Name     string `json:"username"`
-	Password string `json:"password"`
-}
-
-func handleLogin(ctx *gin.Context) {
+func HandleLogin(ctx *gin.Context) {
 	store := ginsession.FromContext(ctx)
 	_, ok := store.Get("user")
 	if ok {
@@ -24,7 +19,12 @@ func handleLogin(ctx *gin.Context) {
 	ctx.HTML(200, "login.html", nil)
 }
 
-func login(ctx *gin.Context) {
+type user struct {
+	Name     string `json:"username"`
+	Password string `json:"password"`
+}
+
+func Login(ctx *gin.Context) {
 	var data user
 	data.Name = ctx.PostForm("username")
 	data.Password = ctx.PostForm("password")

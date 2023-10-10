@@ -2,24 +2,21 @@ package internal
 
 import (
 	"container/list"
-	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
+
+type Credentials struct {
+	Server   string
+	Account  string
+	Password string
+}
 
 var queue *list.List
 
 const PageSize = 20
 
-// Send only one page
-func handleQueue(ctx *gin.Context) {
-	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
-
-	go addOneTask()
-
+func GetQueueData(index int) PageData {
 	if queue.Len() == 0 {
-		ctx.String(200, "")
-		return
+		return PageData{}
 	}
 
 	tasks := getPageByIndex(index)
@@ -29,7 +26,7 @@ func handleQueue(ctx *gin.Context) {
 		Tasks: tasks,
 	}
 
-	ctx.HTML(200, "tbody.html", data)
+	return data
 }
 
 func getPageByIndex(index int) []Task {
@@ -46,9 +43,9 @@ func getPageByIndex(index int) []Task {
 	return tasks
 }
 
-func initQueue() {
+func InitQueue() {
 	queue = list.New()
-	for i := 0; i < 2000; i++ {
+	for i := 0; i < 10; i++ {
 		addOneTask()
 	}
 }
@@ -61,6 +58,20 @@ func addOneTask() {
 		DestinationAccount: "emin",
 		DestinationServer:  "imap.yandex.com",
 		Status:             "In progress",
+	}
+	queue.PushFront(task)
+}
+
+func AddTask(sourceDetails, destinationDetails Credentials) {
+	task := Task{
+		ID:                  queue.Len() + 1,
+		SourceAccount:       sourceDetails.Account,
+		SourceServer:        sourceDetails.Server,
+		SourcePassword:      sourceDetails.Password,
+		DestinationAccount:  destinationDetails.Account,
+		DestinationServer:   destinationDetails.Server,
+		DestinationPassword: destinationDetails.Password,
+		Status:              "In progress",
 	}
 	queue.PushFront(task)
 }

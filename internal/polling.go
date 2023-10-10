@@ -1,17 +1,8 @@
 package internal
 
-import (
-	"strconv"
-
-	"github.com/gin-gonic/gin"
-)
-
-func handleQueuePolling(ctx *gin.Context) {
-	index, _ := strconv.Atoi(ctx.Request.FormValue("page"))
-
+func GetPollingData(index int) PageData {
 	if queue.Len() == 0 {
-		ctx.String(200, "")
-		return
+		return PageData{}
 	}
 
 	tasks := getPageByIndex(index)
@@ -21,5 +12,5 @@ func handleQueuePolling(ctx *gin.Context) {
 		Tasks: tasks,
 	}
 
-	ctx.HTML(200, "table.html", data)
+	return data
 }

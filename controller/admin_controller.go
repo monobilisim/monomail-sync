@@ -1,4 +1,4 @@
-package internal
+package controller
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	ginsession "github.com/go-session/gin-session"
 )
 
-func handleAdmin(ctx *gin.Context) {
+func HandleAdmin(ctx *gin.Context) {
 	store := ginsession.FromContext(ctx)
 	_, ok := store.Get("user")
 	if !ok {

@@ -4,26 +4,17 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/gin-gonic/gin"
 	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
-func handleSearch(ctx *gin.Context) {
-	searchQuery := ctx.PostForm("search-input")
-
-	if searchQuery == "" {
-		handleQueue(ctx)
-		return
-	}
-
+func GetSearchData(searchQuery string) PageData {
 	results := searchInQueue(searchQuery)
 
 	data := PageData{
 		Index: 1,
 		Tasks: results,
 	}
-
-	ctx.HTML(200, "tbody.html", data)
+	return data
 }
 
 func searchInQueue(searchQuery string) []Task {

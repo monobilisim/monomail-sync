@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"imap-sync/internal"
+	"imap-sync/api"
 )
 
 func main() {
 	flag.Parse()
-	internal.InitServer()
+	api.InitServer()
 }
