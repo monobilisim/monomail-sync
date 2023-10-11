@@ -47,25 +47,8 @@ func InitQueue() {
 	SetupLogger()
 	queue = list.New()
 	taskChan = make(chan Task)
-	for i := 0; i < 10; i++ {
-		addOneTask()
-	}
-	go processPendingTasks()
-}
 
-func addOneTask() {
-	task := &Task{
-		ID:                 queue.Len() + 1,
-		SourceAccount:      "jomo",
-		SourceServer:       "imap.gmail.com",
-		DestinationAccount: "emin",
-		DestinationServer:  "imap.yandex.com",
-		Status:             "Pending",
-	}
-	queue.PushFront(task)
-	go func() {
-		taskChan <- *task
-	}()
+	go processPendingTasks()
 }
 
 func AddTask(sourceDetails, destinationDetails Credentials) {

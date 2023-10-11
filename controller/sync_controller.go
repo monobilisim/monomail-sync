@@ -29,6 +29,7 @@ func handleSync(ctx *gin.Context) {
 	// Add to queue
 	log.Infof("Adding %s to queue", sourceDetails.Account)
 	internal.AddTask(sourceDetails, destinationDetails)
+	ctx.HTML(200, "success.html", "added to queue")
 
 	// log.Infof("Syncing %s to %s", sourceDetails.Account, destinationDetails.Account)
 

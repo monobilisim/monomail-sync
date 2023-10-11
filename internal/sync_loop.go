@@ -9,12 +9,10 @@ func processPendingTasks() {
 
 		// If there are no pending tasks, wait for a new task to be added
 		if task == nil {
-			task := <-taskChan
-			simulateSyncIMAP(&task)
 			continue
 		}
 
-		simulateSyncIMAP(task)
+		syncIMAP(task)
 		time.Sleep(2000 * time.Millisecond)
 	}
 }
@@ -26,12 +24,5 @@ func getFirstPendingTask() *Task {
 			return task
 		}
 	}
-	return nil
-}
-
-func simulateSyncIMAP(details *Task) error {
-	details.Status = "In Progress"
-	time.Sleep(5000 * time.Millisecond)
-	details.Status = "Done"
 	return nil
 }

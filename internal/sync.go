@@ -9,6 +9,8 @@ import (
 
 func syncIMAP(details *Task) error {
 
+	details.Status = "In Progress"
+
 	cmd := exec.Command("imapsync", "--host1", details.SourceServer, "--user1", details.SourceAccount, "--password1", details.SourcePassword, "--host2", details.DestinationServer, "--user2", details.DestinationAccount, "--password2", details.DestinationPassword)
 	var stdBuffer bytes.Buffer
 	mw := io.MultiWriter(os.Stdout, &stdBuffer)
