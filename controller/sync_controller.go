@@ -26,7 +26,6 @@ func handleSync(ctx *gin.Context) {
 		Password: destinationPassword,
 	}
 
-	// Creds has both source and destination create a new struct and initialize in one line
 	creds := struct {
 		Source      internal.Credentials
 		Destination internal.Credentials
@@ -39,13 +38,4 @@ func handleSync(ctx *gin.Context) {
 	log.Infof("Adding %s to queue", sourceDetails.Account)
 	internal.AddTask(sourceDetails, destinationDetails)
 	ctx.HTML(200, "sync_success.html", creds)
-
-	// log.Infof("Syncing %s to %s", sourceDetails.Account, destinationDetails.Account)
-
-	// err := syncIMAP(sourceDetails, destinationDetails)
-	// if err != nil {
-	// 	ctx.HTML(200, "error.html", err.Error())
-	// 	return
-	// }
-	// ctx.HTML(200, "success.html", "Synced "+sourceDetails.Account+" to "+destinationDetails.Account)
 }

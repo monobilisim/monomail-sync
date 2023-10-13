@@ -12,5 +12,13 @@
         <span class="badge badge-outline-warning">{{.Status}}</span>
         {{end}}
     </td>
+    <td>
+        <div class="btn-group btn-group-rounded btn-group-scrollable">
+            <button class="btn" hx-trigger="none">Details</button>
+            <button class="btn" hx-trigger="none">Retry</button>
+            <button class="btn" hx-trigger="none">Cancel</button>
+        </div>
+    </td>
+
 </tr>
 {{end}}

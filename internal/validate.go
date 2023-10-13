@@ -21,7 +21,6 @@ func ValidateCredentials(creds Credentials) error {
 	if err != nil {
 		return err
 	}
-	log.Infof("IMAP Connected")
 
 	defer c.Logout()
 

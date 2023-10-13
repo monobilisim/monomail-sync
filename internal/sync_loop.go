@@ -13,8 +13,9 @@ func processPendingTasks() {
 			continue
 		}
 
-		syncIMAP(task)
-		time.Sleep(2000 * time.Millisecond)
+		//syncIMAP(task)
+		simulateTask(task)
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
@@ -26,4 +27,10 @@ func getFirstPendingTask() *Task {
 		}
 	}
 	return nil
+}
+
+func simulateTask(task *Task) {
+	task.Status = "In Progress"
+	time.Sleep(2000 * time.Millisecond)
+	task.Status = "Done"
 }
