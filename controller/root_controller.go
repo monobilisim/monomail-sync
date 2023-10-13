@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var log = internal.Log
+
 var (
 	source_server        = flag.String("source_server", "", "Source server")
 	source_account       = flag.String("source_account", "", "Source account")

@@ -44,9 +44,13 @@ func getPageByIndex(index int) []*Task {
 }
 
 func InitQueue() {
-	SetupLogger()
 	queue = list.New()
 	taskChan = make(chan Task)
+
+	err := InitializeQueueFromDB()
+	if err != nil {
+		log.Error(err)
+	}
 
 	go processPendingTasks()
 }
@@ -64,6 +68,7 @@ func AddTask(sourceDetails, destinationDetails Credentials) {
 	}
 
 	queue.PushFront(task)
+	AddTaskToDB(task)
 	go func() {
 		taskChan <- *task
 	}()

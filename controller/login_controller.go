@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"imap-sync/internal"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,7 @@ func Login(ctx *gin.Context) {
 	data.Name = ctx.PostForm("username")
 	data.Password = ctx.PostForm("password")
 
-	pass, err := getPassword(data.Name)
+	pass, err := internal.GetPassword(data.Name)
 	if err != nil {
 		ctx.IndentedJSON(http.StatusUnauthorized, gin.H{"message": "user not found"})
 		return

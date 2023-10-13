@@ -30,7 +30,7 @@ func getFirstPendingTask() *Task {
 }
 
 func simulateTask(task *Task) {
-	task.Status = "In Progress"
-	time.Sleep(2000 * time.Millisecond)
-	task.Status = "Done"
+	updateTaskStatus(task, "In Progress")
+	time.Sleep(10000 * time.Millisecond)
+	updateTaskStatus(task, "Done")
 }

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -31,7 +32,7 @@ func syncIMAP(details *Task) error {
 	cmd.Stderr = mw
 
 	if err := cmd.Run(); err != nil {
-		return err
+		return fmt.Errorf("error running imapsync: %w", err)
 	}
 
 	details.Status = "Done"

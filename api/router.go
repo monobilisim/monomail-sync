@@ -13,8 +13,8 @@ var log = internal.Log
 var port = flag.String("port", "8080", "Port to listen on")
 
 func InitServer() {
-
-	err := controller.InitDb()
+	internal.SetupLogger()
+	err := internal.InitDb()
 	if err != nil {
 		log.Error(err)
 	}
