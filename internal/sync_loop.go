@@ -9,6 +9,7 @@ func processPendingTasks() {
 
 		// If there are no pending tasks, wait for a new task to be added
 		if task == nil {
+			<-taskChan
 			continue
 		}
 
