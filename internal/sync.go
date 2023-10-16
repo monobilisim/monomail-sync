@@ -25,6 +25,8 @@ func syncIMAP(details *Task) error {
 		"--user2", details.DestinationAccount,
 		"--password2", details.DestinationPassword,
 		"--logfile", logname)
+
+	updateTaskLogFile(details, logname)
 	var stdBuffer bytes.Buffer
 	mw := io.MultiWriter(os.Stdout, &stdBuffer)
 

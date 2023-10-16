@@ -9,7 +9,7 @@
         <th>Actions</th>
     </tr>
 </thead>
-<tbody id="table-body" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
-    hx-swap="innerHTML transition:true" hx-trigger="every 100s">
+<tbody id="table-body" hx-boost="true" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
+    hx-swap="innerHTML transition:true" hx-trigger="every 60s">
     {{template "tbody.html" .}}
 </tbody>

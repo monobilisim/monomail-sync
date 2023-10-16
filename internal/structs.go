@@ -9,6 +9,7 @@ type Task struct {
 	DestinationServer   string
 	DestinationPassword string
 	Status              string
+	LogFile             string
 }
 
 type PageData struct {

@@ -25,13 +25,13 @@
 
 <!-- Admin Panel for viewing the queue and other stats -->
 
-<body>
+<body x-data="{ model_open: '' }">
     <!-- Header -->
     {{template "admin_navbar.html"}}
 
     <!-- Table for showing the queue -->
     <div class="container p-4 mx-auto flex gap-4">
-        <div class="flex w-full overflow-x-auto flex-col">
+        <div class=" flex w-full overflow-x-auto flex-col">
             <h2 class="text-4xl m-2">Queue</h2>
 
             <!-- Page controls -->
@@ -44,6 +44,10 @@
         </div>
     </div>
 
+
+    <div class="modal w-screen" id="detailsmodal" :class="model_open ? 'visible opacity-100' : '' ">
+        {{ template "log_window.html"}}
+    </div>
 
     <script>
         var toggleDark = document.getElementById("theme-dark-toggle");
@@ -86,6 +90,9 @@
 
         const updateButtons = (buttons) => {
             buttons.forEach((button) => {
+                if (!button.id.startsWith('sync')) {
+                    return;
+                }
                 button.addEventListener('click', () => {
                     if (currentBtn) {
                         currentBtn.classList.remove('btn-primary');

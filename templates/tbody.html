@@ -1,5 +1,5 @@
 {{range .Tasks}}
-<tr hx-trigger="none">
+<tr>
     <th>{{.ID}}</th>
     <td>{{.SourceServer}}</td>
     <td>{{.SourceAccount}}</td>
@@ -14,7 +14,10 @@
     </td>
     <td>
         <div class="btn-group btn-group-rounded btn-group-scrollable">
-            <button class="btn btn-solid-primary" hx-trigger="none">Details</button>
+            <label hx-get="/api/details?id={{.ID}}" hx-target="#detailsmodal" hx-swap="innerHTML" hx-trigger="click"
+                class="btn btn-solid-primary" for="modal-details">Details</label>
+            <input class="modal-state" id="modal-details" type="checkbox" x-model="model_open" />
+
             <button class="btn btn-solid-warning" hx-trigger="none">Retry</button>
             <button class="btn btn-solid-error" hx-trigger="none">Cancel</button>
         </div>

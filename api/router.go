@@ -30,16 +30,16 @@ func InitServer() {
 
 	router.GET("/", controller.HandleRoot)
 	router.GET("/admin", controller.HandleAdmin)
+	router.GET("/login", controller.HandleLogin)
 	router.GET("/favicon.ico", func(ctx *gin.Context) {
 		ctx.File("favicon.ico")
 	})
-	router.GET("/login", controller.HandleLogin)
-
 	go internal.InitQueue()
 	// API endpoints
 	router.GET("/api/queue", controller.HandleQueue)
 	router.GET("/api/queuepoll", controller.HandleQueuePolling)
 	router.GET("/api/pagination", controller.HandlePagination)
+	router.GET("/api/details", controller.HandleGetLog)
 	router.POST("/api/validate", controller.HandleValidate)
 	router.POST("/api/search", controller.HandleSearch)
 	router.POST("/auth/login", controller.Login)

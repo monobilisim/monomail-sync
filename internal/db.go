@@ -52,7 +52,8 @@ func InitDb() error {
 	destination_account VARCHAR(64) NULL,
 	destination_server VARCHAR(64) NULL,
 	destination_password VARCHAR(64) NULL,
-	status VARCHAR(64) NULL
+	status VARCHAR(64) NULL,
+	logfile VARCHAR(64) NULL
 	);
 	`
 
@@ -140,13 +141,13 @@ func AddTaskToDB(task *Task) error {
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("INSERT INTO tasks(source_account, source_server, source_password, destination_account, destination_server, destination_password, status) VALUES(?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO tasks(source_account, source_server, source_password, destination_account, destination_server, destination_password, status, logfile) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(task.SourceAccount, task.SourceServer, task.SourcePassword, task.DestinationAccount, task.DestinationServer, task.DestinationPassword, task.Status)
+	_, err = stmt.Exec(task.SourceAccount, task.SourceServer, task.SourcePassword, task.DestinationAccount, task.DestinationServer, task.DestinationPassword, task.Status, task.LogFile)
 	if err != nil {
 		return fmt.Errorf("error executing statement: %w", err)
 	}
@@ -178,6 +179,30 @@ func updateTaskStatus(task *Task, status string) error {
 	return nil
 }
 
+func updateTaskLogFile(task *Task, logFile string) error {
+	var err error
+	db, err = sql.Open("sqlite3", *DB_path)
+	if err != nil {
+		return fmt.Errorf("error opening database: %w", err)
+	}
+	defer db.Close()
+
+	stmt, err := db.Prepare("UPDATE tasks SET logfile = ? WHERE id = ?")
+	if err != nil {
+		return fmt.Errorf("error preparing statement: %w", err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(logFile, task.ID)
+	if err != nil {
+		return fmt.Errorf("error executing statement: %w", err)
+	}
+
+	task.LogFile = logFile
+
+	return nil
+}
+
 func InitializeQueueFromDB() error {
 	log.Info("Initializing queue from database")
 	var err error
@@ -187,7 +212,7 @@ func InitializeQueueFromDB() error {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, source_account, source_server, source_password, destination_account, destination_server, destination_password, status FROM tasks")
+	rows, err := db.Query("SELECT id, source_account, source_server, source_password, destination_account, destination_server, destination_password, status, logfile FROM tasks")
 	if err != nil {
 		return fmt.Errorf("error querying database: %w", err)
 	}
@@ -195,7 +220,7 @@ func InitializeQueueFromDB() error {
 
 	for rows.Next() {
 		var task Task
-		err := rows.Scan(&task.ID, &task.SourceAccount, &task.SourceServer, &task.SourcePassword, &task.DestinationAccount, &task.DestinationServer, &task.DestinationPassword, &task.Status)
+		err := rows.Scan(&task.ID, &task.SourceAccount, &task.SourceServer, &task.SourcePassword, &task.DestinationAccount, &task.DestinationServer, &task.DestinationPassword, &task.Status, &task.LogFile)
 		if err != nil {
 			return fmt.Errorf("error scanning row: %w", err)
 		}
