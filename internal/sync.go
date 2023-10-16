@@ -11,7 +11,7 @@ import (
 
 func syncIMAP(details *Task) error {
 
-	details.Status = "In Progress"
+	updateTaskStatus(details, "In Progress")
 
 	currentTime := time.Now().Format("2006.01.02_15:04:05")
 
@@ -34,10 +34,11 @@ func syncIMAP(details *Task) error {
 	cmd.Stderr = mw
 
 	if err := cmd.Run(); err != nil {
+		updateTaskStatus(details, "Error")
 		return fmt.Errorf("error running imapsync: %w", err)
 	}
 
-	details.Status = "Done"
+	updateTaskStatus(details, "Done")
 
 	return nil
 }

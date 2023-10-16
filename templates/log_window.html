@@ -1,7 +1,17 @@
 <label class="modal-overlay" for="modal-details"></label>
-<div class="modal-content flex flex-col gap-5 max-w-3xl">
+<div class="modal-content flex flex-col gap-3 max-w-7xl min-w-5xl">
     <label for="modal-details" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-    <h2 class="text-xl">Task details</h2>
+    <div class="divider divider-horizontal text-3xl"> Task details</div>
 
-    <pre class="overflow-scroll">{{.log}}</pre>
+    <!-- Show start date and end date side by side at opposite sides -->
+    <div class="flex flex-row gap-96">
+        <div class="text-xl">Start Date: </div>
+        <div class="text-xl">End Date: </div>
+    </div>
+
+
+
+
+
+    <pre class="overflow-auto">{{.log}}</pre>
 </div>
