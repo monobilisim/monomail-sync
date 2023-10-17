@@ -27,7 +27,7 @@ func HandleValidate(ctx *gin.Context) {
 	}
 
 	if destCreds == "" && sourceCreds == "" && submitsync != "" {
-		handleSync(ctx)
+		HandleSync(ctx)
 		return
 	}
 

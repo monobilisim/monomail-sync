@@ -40,6 +40,7 @@ func InitServer() {
 	router.GET("/api/queuepoll", controller.HandleQueuePolling)
 	router.GET("/api/pagination", controller.HandlePagination)
 	router.GET("/api/details", controller.HandleGetLog)
+	router.GET("/api/sync", controller.HandleSync)
 	router.POST("/api/validate", controller.HandleValidate)
 	router.POST("/api/search", controller.HandleSearch)
 	router.POST("/auth/login", controller.Login)

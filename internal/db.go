@@ -224,6 +224,11 @@ func InitializeQueueFromDB() error {
 		if err != nil {
 			return fmt.Errorf("error scanning row: %w", err)
 		}
+
+		if task.Status == "In Progress" {
+			task.Status = "Cancelled"
+		}
+
 		queue.PushFront(&task)
 	}
 

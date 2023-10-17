@@ -8,19 +8,20 @@
     <td>
         {{if eq .Status "Done"}}
         <span class="badge badge-outline-success">{{.Status}}</span>
-        {{else if eq .Status "Error"}}
+        {{else if eq .Status "Error" "Cancelled" }}
         <span class="badge badge-outline-error">{{.Status}}</span>
         {{else}}
         <span class="badge badge-outline-warning">{{.Status}}</span>
         {{end}}
     </td>
     <td>
-        {{if (eq .Status "Done" "Error")}}
+        {{if (eq .Status "Done" "Error" "Cancelled")}}
         <div class="btn-group btn-group-rounded btn-group-scrollable">
             <label hx-get="/api/details?id={{.ID}}" hx-target="#detailsmodal" hx-swap="innerHTML" hx-trigger="click"
                 class="btn btn-solid-primary" for="modal-details">Details</label>
             <input class="modal-state" id="modal-details" type="checkbox" x-model="model_open" />
-            <button class="btn btn-solid-warning" hx-trigger="none">Retry</button>
+            <button hx-get="/api/sync?retry={{.ID}}" hx-target="#error-notification" hx-swap="outerHTML"
+                class="btn btn-solid-warning">Retry</button>
         </div>
         {{else}}
         <button class="btn btn-solid-error btn-rounded" hx-trigger="none">Cancel</button>
