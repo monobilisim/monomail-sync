@@ -13,17 +13,20 @@ func HandleValidate(ctx *gin.Context) {
 	submitsync := ctx.PostForm("submit_sync")
 
 	var Server, Account, Password string
+	var Source bool
 
 	if sourceCreds != "" {
 		Server = ctx.PostForm("source_server")
 		Account = ctx.PostForm("source_account")
 		Password = ctx.PostForm("source_password")
+		Source = true
 	}
 
 	if destCreds != "" {
 		Server = ctx.PostForm("destination_server")
 		Account = ctx.PostForm("destination_account")
 		Password = ctx.PostForm("destination_password")
+		Source = false
 	}
 
 	if destCreds == "" && sourceCreds == "" && submitsync != "" {
@@ -35,6 +38,7 @@ func HandleValidate(ctx *gin.Context) {
 		Server:   Server,
 		Account:  Account,
 		Password: Password,
+		Source:   Source,
 	}
 
 	log.Infof("Validating credentials for: %s", creds.Account)

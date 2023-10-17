@@ -8,6 +8,7 @@ type Credentials struct {
 	Server   string
 	Account  string
 	Password string
+	Source   bool
 }
 
 var queue *list.List
