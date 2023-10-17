@@ -52,7 +52,7 @@ func InitQueue() {
 		log.Error(err)
 	}
 
-	go processPendingTasks()
+	processPendingTasks()
 }
 
 func AddTask(sourceDetails, destinationDetails Credentials) {
