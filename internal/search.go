@@ -62,3 +62,19 @@ func searchInQueue(searchQuery string) []*Task {
 
 	return results
 }
+
+func searchExactCredentials(sourceDetails, destinationDetails Credentials) []*Task {
+	var results []*Task
+	for i, e := 0, queue.Front(); i < queue.Len() && e != nil; i, e = i+1, e.Next() {
+		task := e.Value.(*Task)
+		if task.SourceAccount == sourceDetails.Account &&
+			task.SourceServer == sourceDetails.Server &&
+			task.SourcePassword == sourceDetails.Password &&
+			task.DestinationAccount == destinationDetails.Account &&
+			task.DestinationServer == destinationDetails.Server &&
+			task.DestinationPassword == destinationDetails.Password {
+			results = append(results, task)
+		}
+	}
+	return results
+}
