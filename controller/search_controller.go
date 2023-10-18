@@ -8,13 +8,25 @@ import (
 
 func HandleSearch(ctx *gin.Context) {
 	searchQuery := ctx.PostForm("search-input")
+	exact := ctx.Query("exact")
+	var data internal.PageData
 
-	if searchQuery == "" {
-		HandleQueue(ctx)
-		return
+	if exact == "true" {
+
+		sourceCreds := internal.Credentials{
+			Server:  ctx.Query("source_server"),
+			Account: ctx.Query("source_account"),
+		}
+		destCreds := internal.Credentials{
+			Server:  ctx.Query("destination_server"),
+			Account: ctx.Query("destination_account"),
+		}
+
+		data = internal.GetSearchData("", true, sourceCreds, destCreds)
+	} else {
+
+		data = internal.GetSearchData(searchQuery, false, internal.Credentials{}, internal.Credentials{})
 	}
-
-	data := internal.GetSearchData(searchQuery)
 
 	ctx.HTML(200, "tbody.html", data)
 }

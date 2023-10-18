@@ -7,8 +7,13 @@ import (
 	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
-func GetSearchData(searchQuery string) PageData {
-	results := searchInQueue(searchQuery)
+func GetSearchData(searchQuery string, isExact bool, sourceDetails, destinationDetails Credentials) PageData {
+	var results []*Task
+	if isExact {
+		results = searchExactCredentials(sourceDetails, destinationDetails)
+	} else {
+		results = searchInQueue(searchQuery)
+	}
 
 	data := PageData{
 		Index: 1,
@@ -69,10 +74,8 @@ func searchExactCredentials(sourceDetails, destinationDetails Credentials) []*Ta
 		task := e.Value.(*Task)
 		if task.SourceAccount == sourceDetails.Account &&
 			task.SourceServer == sourceDetails.Server &&
-			task.SourcePassword == sourceDetails.Password &&
 			task.DestinationAccount == destinationDetails.Account &&
-			task.DestinationServer == destinationDetails.Server &&
-			task.DestinationPassword == destinationDetails.Password {
+			task.DestinationServer == destinationDetails.Server {
 			results = append(results, task)
 		}
 	}

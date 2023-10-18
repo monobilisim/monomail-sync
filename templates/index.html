@@ -64,12 +64,12 @@
             <div class="grid gap-4 form-group">
                 <div class="form-field">
                     <label for="source_server" class="block font-semibold">Server</label>
-                    <input type="text" id="source_server" name="source_server" placeholder="Source Server"
+                    <input type="text" x-model="source_server" id="source_server" name="source_server" placeholder="Source Server"
                         class="input max-w-full" value="{{.SourceDetails.Server}}">
                 </div>
                 <div>
                     <label for="source_account" class="block font-semibold">Account</label>
-                    <input type="text" id="source_account" name="source_account" placeholder="Source Account"
+                    <input type="text" x-model="source_account" id="source_account" name="source_account" placeholder="Source Account"
                         class="input max-w-full" value="{{.SourceDetails.Account}}">
                 </div>
                 <div>
@@ -88,13 +88,13 @@
             <div class="grid gap-4 form-group">
                 <div class="form-field">
                     <label for="destination_server" class="block font-semibold">Server</label>
-                    <input type="text" id="destination_server" name="destination_server"
+                    <input type="text" x-model="destination_server" id="destination_server" name="destination_server"
                         placeholder="Destination Server" class="input max-w-full"
                         value="{{.DestinationDetails.Server}}">
                 </div>
                 <div>
                     <label for="destination_account" class="block font-semibold">Account</label>
-                    <input type="text" id="destination_account" name="destination_account"
+                    <input type="text" x-model="destination_account" id="destination_account" name="destination_account"
                         placeholder="Destination Account" class="input max-w-full"
                         value="{{.DestinationDetails.Account}}">
                 </div>
@@ -121,22 +121,9 @@
                     form="credentials_form"></input>
             </div>
             <div class="grid gap-4">
-                <table class="table table-hover table-compact">
-                    <thead>
-                        <tr>
-                            <th>Index</th>
-                            <th>Source Server</th>
-                            <th>Source Account</th>
-                            <th>Destination Server</th>
-                            <th>Destination Account</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
+                <table class="table-hover table-compact table" id="queue-table">
+                {{template "table_user.html"}}
+            </table>
             </div>
         </div>
     </div>
@@ -226,19 +213,28 @@
 
         document.addEventListener('alpine:init', () => {
             Alpine.data('data', () => ({
+                source_server: '',
+                source_account: '',
+                destination_server: '',
+                destination_account: '',
 
                 source_validated: false,
                 destination_validated: false,
+                showQueue(){
+                    if (this.source_validated === true && this.destination_validated === true) {
+                        htmx.ajax('POST', "/api/search?exact=true&source_server="+this.source_server+"&source_account="+this.source_account+"&destination_server="+this.destination_server+"&destination_account="+this.destination_account+"", {target:'#table-body',swap:'innerHTML'})
+                    }
+                },
                 update_source_status(result) {
-                    this.source_validated = result
+                    this.source_validated = result;
+                    this.showQueue();
                 },
                 update_destination_status(result) {
-                    this.destination_validated = result
+                    this.destination_validated = result;
+                    this.showQueue();
                 },
             }))
         })
-
-
 
     </script>
 

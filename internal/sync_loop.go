@@ -16,8 +16,8 @@ func processPendingTasks() {
 			continue
 		}
 
-		//syncIMAP(task)
-		simulateTask(task)
+		syncIMAP(task)
+		// simulateTask(task)
 		time.Sleep(100 * time.Millisecond)
 	}
 }

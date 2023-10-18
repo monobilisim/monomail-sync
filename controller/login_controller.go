@@ -10,13 +10,13 @@ import (
 )
 
 func HandleLogin(ctx *gin.Context) {
-	// store := ginsession.FromContext(ctx)
-	// _, ok := store.Get("user")
-	// if ok {
-	// 	// User is not logged in, redirect them to the login page
-	// 	ctx.Redirect(http.StatusTemporaryRedirect, "/")
-	// 	return
-	// }
+	store := ginsession.FromContext(ctx)
+	_, ok := store.Get("user")
+	if ok {
+		// User is not logged in, redirect them to the login page
+		ctx.Redirect(http.StatusTemporaryRedirect, "/")
+		return
+	}
 	ctx.HTML(200, "login.html", nil)
 }
 
