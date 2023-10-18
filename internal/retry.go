@@ -1,10 +1,12 @@
 package internal
 
 func RetryTask(task *Task) {
-	if err := updateTaskStatus(task, "Pending"); err != nil {
-		log.Errorf("Failed to add task: %s", err)
-	}
+	newTask := *task
+	newTask.Status = "Pending"
+	newTask.ID = queue.Len() + 1
+	queue.PushFront(&newTask)
+	AddTaskToDB(task)
 	go func() {
-		taskChan <- *task
+		taskChan <- newTask
 	}()
 }
