@@ -12,6 +12,9 @@ func HandleSync(ctx *gin.Context) {
 	if ctx.Request.FormValue("retry") != "" {
 		handleRetry(ctx)
 		return
+	} else if ctx.Request.FormValue("cancel") != "" {
+		handleCancel(ctx)
+		return
 	}
 
 	sourceServer := ctx.PostForm("source_server")
@@ -45,6 +48,21 @@ func HandleSync(ctx *gin.Context) {
 	log.Infof("Adding %s to queue", sourceDetails.Account)
 	internal.AddTask(sourceDetails, destinationDetails)
 	ctx.HTML(200, "sync_success.html", creds)
+}
+
+func handleCancel(ctx *gin.Context) {
+	id := ctx.Request.FormValue("cancel")
+
+	val, err := strconv.Atoi(id)
+	if err != nil {
+		log.Errorf("Error converting %s to int", id)
+	}
+
+	task := internal.GetTaskFromID(val)
+
+	internal.CancelTask(task)
+
+	log.Infof("%#v", task)
 }
 
 func handleRetry(ctx *gin.Context) {

@@ -111,6 +111,10 @@
         </div>
     </form>
 
+    <div class="modal w-screen" id="detailsmodal" :class="model_open ? 'visible opacity-100' : '' ">
+        {{ template "log_window.html"}}
+    </div>
+    
     <!-- Log output -->
     <div class="container mx-auto flex px-4" x-show='source_validated && destination_validated'>
         <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg">
@@ -209,10 +213,9 @@
         toggleDark.addEventListener("click", darkMode, false);
         toggleLight.addEventListener("click", lightMode, false);
 
-
-
         document.addEventListener('alpine:init', () => {
             Alpine.data('data', () => ({
+                model_open: '',
                 source_server: '',
                 source_account: '',
                 destination_server: '',
@@ -220,11 +223,19 @@
 
                 source_validated: false,
                 destination_validated: false,
+
                 showQueue(){
                     if (this.source_validated === true && this.destination_validated === true) {
                         htmx.ajax('POST', "/api/search?exact=true&source_server="+this.source_server+"&source_account="+this.source_account+"&destination_server="+this.destination_server+"&destination_account="+this.destination_account+"", {target:'#table-body',swap:'innerHTML'})
                     }
                 },
+
+                init() {
+                    setInterval(() => {
+                        this.showQueue();
+                    }, 2000);
+                },
+
                 update_source_status(result) {
                     this.source_validated = result;
                     this.showQueue();
@@ -233,8 +244,12 @@
                     this.destination_validated = result;
                     this.showQueue();
                 },
-            }))
+            }
+            
+            ))
+
         })
+
 
     </script>
 
