@@ -1,12 +1,19 @@
 package internal
 
+// CancelTask cancels a task and removes it from channel
 func CancelTask(task *Task) {
 	if task.Status != "In Progress" {
 		updateTaskStatus(task, "Cancelled")
-		log.Debug(len(taskChan))
-		_ = <-taskChan
-		log.Debug(len(taskChan))
-		return
-	}
 
+		select {
+		case <-taskChan:
+			log.Info("Task cancelled: ", task.ID)
+		default:
+			log.Info("Task not found in channel: ", task.ID)
+		}
+
+	} else {
+		cancel()
+		updateTaskStatus(task, "Cancelled")
+	}
 }

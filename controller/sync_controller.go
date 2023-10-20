@@ -62,7 +62,34 @@ func handleCancel(ctx *gin.Context) {
 
 	internal.CancelTask(task)
 
-	log.Infof("%#v", task)
+	sourceServer := task.SourceServer
+	sourceAccount := task.SourceAccount
+	sourcePassword := task.SourcePassword
+	destinationServer := task.DestinationServer
+	destinationAccount := task.DestinationAccount
+	destinationPassword := task.DestinationPassword
+
+	sourceDetails := internal.Credentials{
+		Server:   sourceServer,
+		Account:  sourceAccount,
+		Password: sourcePassword,
+	}
+
+	destinationDetails := internal.Credentials{
+		Server:   destinationServer,
+		Account:  destinationAccount,
+		Password: destinationPassword,
+	}
+
+	creds := struct {
+		Source      internal.Credentials
+		Destination internal.Credentials
+	}{
+		Source:      sourceDetails,
+		Destination: destinationDetails,
+	}
+
+	ctx.HTML(200, "sync_success.html", creds)
 }
 
 func handleRetry(ctx *gin.Context) {

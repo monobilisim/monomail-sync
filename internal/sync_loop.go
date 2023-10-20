@@ -1,9 +1,13 @@
 package internal
 
 import (
+	"context"
 	"os"
 	"time"
 )
+
+var ctx context.Context
+var cancel context.CancelFunc
 
 func processPendingTasks() {
 	for {
@@ -16,9 +20,12 @@ func processPendingTasks() {
 			continue
 		}
 
-		// syncIMAP(task)
-		simulateTask(task)
-		time.Sleep(100 * time.Millisecond)
+		log.Info("Processing task: ", task.ID)
+		ctx, cancel = context.WithCancel(context.Background())
+		syncIMAP(ctx, task)
+
+		// simulateTask(task)
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
 
@@ -50,6 +57,6 @@ func simulateTask(task *Task) {
 	logFile.WriteString("This is a test log file\n")
 
 	updateTaskStatus(task, "In Progress")
-	time.Sleep(10000 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond)
 	updateTaskStatus(task, "Done")
 }
