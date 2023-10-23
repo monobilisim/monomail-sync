@@ -20,5 +20,5 @@ func HandleAdmin(ctx *gin.Context) {
 		return
 	}
 
-	ctx.HTML(200, "admin.html", nil)
+	ctx.HTML(200, "admin.html", Data["admin"])
 }

@@ -8,45 +8,55 @@ import (
 
 func HandleValidate(ctx *gin.Context) {
 
-	sourceCreds := ctx.PostForm("source_creds")
-	destCreds := ctx.PostForm("destination_creds")
+	validate := ctx.PostForm("validate")
 	submitsync := ctx.PostForm("submit_sync")
 
-	var Server, Account, Password string
-	var Source bool
+	var SServer, SAccount, SPassword string
+	var DServer, DAccount, DPassword string
 
-	if sourceCreds != "" {
-		Server = ctx.PostForm("source_server")
-		Account = ctx.PostForm("source_account")
-		Password = ctx.PostForm("source_password")
-		Source = true
+	if validate != "" {
+		SServer = ctx.PostForm("source_server")
+		SAccount = ctx.PostForm("source_account")
+		SPassword = ctx.PostForm("source_password")
+		DServer = ctx.PostForm("destination_server")
+		DAccount = ctx.PostForm("destination_account")
+		DPassword = ctx.PostForm("destination_password")
 	}
 
-	if destCreds != "" {
-		Server = ctx.PostForm("destination_server")
-		Account = ctx.PostForm("destination_account")
-		Password = ctx.PostForm("destination_password")
-		Source = false
-	}
-
-	if destCreds == "" && sourceCreds == "" && submitsync != "" {
+	if validate == "" && submitsync != "" {
 		HandleSync(ctx)
 		return
 	}
 
 	creds := internal.Credentials{
-		Server:   Server,
-		Account:  Account,
-		Password: Password,
-		Source:   Source,
+		Server:   SServer,
+		Account:  SAccount,
+		Password: SPassword,
+		Source:   true,
 	}
 
 	log.Infof("Validating credentials for: %s", creds.Account)
 
 	err := internal.ValidateCredentials(creds)
 	if err != nil {
-		ctx.HTML(200, "error.html", err.Error())
+		ctx.HTML(200, "error.html", "Couldn't verify for user: "+SAccount)
 		return
 	}
-	ctx.HTML(200, "success.html", creds)
+
+	creds = internal.Credentials{
+		Server:   DServer,
+		Account:  DAccount,
+		Password: DPassword,
+		Source:   false,
+	}
+
+	log.Infof("Validating credentials for: %s", creds.Account)
+
+	err = internal.ValidateCredentials(creds)
+	if err != nil {
+		ctx.HTML(200, "error.html", "Couldn't verify for user: "+DAccount)
+		return
+	}
+
+	ctx.HTML(200, "success.html", nil)
 }

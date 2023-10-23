@@ -17,7 +17,8 @@ func HandleLogin(ctx *gin.Context) {
 		ctx.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
-	ctx.HTML(200, "login.html", nil)
+
+	ctx.HTML(200, "login.html", Data["login"])
 }
 
 type user struct {

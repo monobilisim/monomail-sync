@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>imapsync-web-admin</title>
+    <title>Monomail-Sync Admin</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
     <script src="/static/js/tailwind.js"></script>
     <script src="/static/js/htmx.min.js"
@@ -55,7 +55,21 @@
 
             <table class="table-hover table-compact table" id="queue-table" hx-get="/api/queue?page=1" hx-trigger="load"
                 hx-target="#table-body" hx-swap-oob="innerHTML transition:true">
-                {{template "table.html" .}}
+                <thead>
+                    <tr>
+                        <th>{{index . "index"}}</th>
+                        <th>{{index . "source_server"}}</th>
+                        <th>{{index . "source_account"}}</th>
+                        <th>{{index . "dest_server"}}</th>
+                        <th>{{index . "dest_account"}}</th>
+                        <th>{{index . "status"}}</th>
+                        <th>{{index . "actions"}}</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" hx-boost="true" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
+                    hx-swap="innerHTML transition:true" hx-trigger="every 60s">
+                    {{template "tbody.html" .}}
+                </tbody>
             </table>
         </div>
     </div>

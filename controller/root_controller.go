@@ -34,9 +34,13 @@ func HandleRoot(ctx *gin.Context) {
 	data := struct {
 		SourceDetails      internal.Credentials
 		DestinationDetails internal.Credentials
+		Text               map[string]string
+		Table              map[string]string
 	}{
 		SourceDetails:      sourceDetails,
 		DestinationDetails: destinationDetails,
+		Text:               Data["index"],
+		Table:              Data["table"],
 	}
 	ctx.HTML(200, "index.html", data)
 }

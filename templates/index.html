@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>imapsync-web</title>
+    <title>Monomail-Sync</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
     <script src="/static/js/tailwind.js"></script>
     <script src="/static/js/htmx.min.js"
@@ -37,7 +37,7 @@
     <!-- <h1 class="text-4xl font-semibold text-center my-4">imapsync-web</h1> -->
     <div class="navbar bg-backgroundSecondary">
         <div class="navbar-start font-semibold">
-            <a class="navbar-item">imapsync-web</a>
+            <a class="navbar-item">monomail-sync</a>
         </div>
         <div class="navbar-end m-0 p-0">
 
@@ -60,53 +60,47 @@
 
         <!-- Source details -->
         <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Source Details</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{index .Text "source_details"}}</h2>
             <div class="grid gap-4 form-group">
                 <div class="form-field">
-                    <label for="source_server" class="block font-semibold">Server</label>
+                    <label for="source_server" class="block font-semibold">{{index .Text "server"}}</label>
                     <input type="text" x-model="source_server" id="source_server" name="source_server"
                         placeholder="Source Server" class="input max-w-full" value="{{.SourceDetails.Server}}">
                 </div>
                 <div>
-                    <label for="source_account" class="block font-semibold">Account</label>
+                    <label for="source_account" class="block font-semibold">{{index .Text "account"}}</label>
                     <input type="text" x-model="source_account" id="source_account" name="source_account"
                         placeholder="Source Account" class="input max-w-full" value="{{.SourceDetails.Account}}">
                 </div>
                 <div>
-                    <label for="source_password" class="block font-semibold">Password</label>
+                    <label for="source_password" class="block font-semibold">{{index .Text "password"}}</label>
                     <input type="password" id="source_password" name="source_password" placeholder="Source Password"
                         class="input max-w-full" value="{{.SourceDetails.Password}}">
                 </div>
-                <input value="Validate Credentials" name="source_creds" type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
-                </input>
             </div>
         </div>
         <!-- Destination details -->
         <div class="w-1/2 rounded-xl border border-border bg-backgroundSecondary rounded-lg p-4 shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Destination Details</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{index .Text "destination_details"}}</h2>
             <div class="grid gap-4 form-group">
                 <div class="form-field">
-                    <label for="destination_server" class="block font-semibold">Server</label>
+                    <label for="destination_server" class="block font-semibold">{{index .Text "server"}}</label>
                     <input type="text" x-model="destination_server" id="destination_server" name="destination_server"
                         placeholder="Destination Server" class="input max-w-full"
                         value="{{.DestinationDetails.Server}}">
                 </div>
                 <div>
-                    <label for="destination_account" class="block font-semibold">Account</label>
+                    <label for="destination_account" class="block font-semibold">{{index .Text "account"}}</label>
                     <input type="text" x-model="destination_account" id="destination_account" name="destination_account"
                         placeholder="Destination Account" class="input max-w-full"
                         value="{{.DestinationDetails.Account}}">
                 </div>
                 <div>
-                    <label for="destination_password" class="block font-semibold">Password</label>
+                    <label for="destination_password" class="block font-semibold">{{index .Text "password"}}</label>
                     <input type="password" id="destination_password" name="destination_password"
                         placeholder="Destination Password" class="input max-w-full"
                         value="{{.DestinationDetails.Password}}">
                 </div>
-                <input value="Validate Credentials" name="destination_creds" type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg mt-4">
-                </input>
             </div>
         </div>
     </form>
@@ -116,17 +110,37 @@
     </div>
 
     <!-- Log output -->
-    <div class="container mx-auto flex px-4" x-show='source_validated && destination_validated'>
+    <div class="container mx-auto flex px-4">
         <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-semibold">User queue</h2>
-                <input type="submit" class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg"
-                    id="start-sync-btn" name="submit_sync" value="Start synchronization"
-                    form="credentials_form"></input>
+                <h2 class="text-2xl font-semibold">{{index .Text "user_queue"}}</h2>
+                <div x-show='!validated'>
+                    <input type="submit" class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 px-6 rounded-lg"
+                    name="validate" type="submit" value={{index .Text "validate"}}
+                    form="credentials_form" />  
+                </div>
+                <div x-show='validated'>
+                    <input type="submit" class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 rounded-lg"
+                    id="start-sync-btn" name="submit_sync" value={{index .Text "sync"}}
+                    form="credentials_form" />  
+                </div>
             </div>
-            <div class="grid gap-4">
+            <div class="grid gap-4" x-show='validated'>
                 <table class="table-hover table-compact table" id="queue-table">
-                    {{template "table_user.html"}}
+                    <thead>
+                        <tr>
+                            <th>{{index .Table "index"}}</th>
+                            <th>{{index .Table "source_server"}}</th>
+                            <th>{{index .Table "source_account"}}</th>
+                            <th>{{index .Table "dest_server"}}</th>
+                            <th>{{index .Table "dest_account"}}</th>
+                            <th>{{index .Table "status"}}</th>
+                            <th>{{index .Table "actions"}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {{template "tbody.html"}}
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -221,11 +235,10 @@
                 destination_server: '{{.DestinationDetails.Server}}',
                 destination_account: '{{.DestinationDetails.Account}}',
 
-                source_validated: false,
-                destination_validated: false,
+                validated: false,
 
                 showQueue() {
-                    if (this.source_validated === true && this.destination_validated === true) {
+                    if (this.validated === true) {
                         htmx.ajax('POST', "/api/search?exact=true&source_server=" + this.source_server + "&source_account=" + this.source_account + "&destination_server=" + this.destination_server + "&destination_account=" + this.destination_account + "", { target: '#table-body', swap: 'innerHTML' })
                     }
                 },
@@ -233,15 +246,11 @@
                 init() {
                     setInterval(() => {
                         this.showQueue();
-                    }, 60000);
+                    }, 2000);
                 },
 
-                update_source_status(result) {
-                    this.source_validated = result;
-                    this.showQueue();
-                },
-                update_destination_status(result) {
-                    this.destination_validated = result;
+                update_status(result) {
+                    this.validated = result;
                     this.showQueue();
                 },
             }

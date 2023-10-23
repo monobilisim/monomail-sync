@@ -19,6 +19,8 @@ func InitServer() {
 		log.Error(err)
 	}
 
+	controller.InitLocalizer()
+
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 

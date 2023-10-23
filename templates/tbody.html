@@ -7,11 +7,65 @@
   <td>{{.DestinationAccount}}</td>
   <td>
     {{if eq .Status "Done"}}
-    <span class="badge badge-outline-success">{{.Status}}</span>
+    <span
+      class="badge-outline-success"
+      alt="{{.Status}}"
+      title="{{.Status}}"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M4.5 12.75l6 6 9-13.5"
+        />
+      </svg>
+    </span>
     {{else if eq .Status "Error" "Cancelled" }}
-    <span class="badge badge-outline-error">{{.Status}}</span>
+    <span
+      class="badge-outline-error"
+      alt="{{.Status}}"
+      title="{{.Status}}"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+        />
+      </svg>
+    </span>
     {{else}}
-    <span class="badge badge-outline-warning">{{.Status}}</span>
+    <span
+      class="badge-outline-warning"
+      alt="{{.Status}}"
+      title="{{.Status}}"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    </span>
     {{end}}
   </td>
   <td>
@@ -22,10 +76,25 @@
         hx-target="#detailsmodal"
         hx-swap="innerHTML"
         hx-trigger="click"
-        class="btn btn-solid-primary"
+        class="btn-solid-primary p-2"
         for="modal-details"
-        >Details</label
-      >
+        alt="details"
+        title="details"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+          />
+        </svg>
+      </label>
       <input
         class="modal-state"
         id="modal-details"
@@ -36,9 +105,24 @@
         hx-get="/api/sync?retry={{.ID}}"
         hx-target="#error-notification"
         hx-swap="outerHTML"
-        class="btn btn-solid-warning"
+        class="btn-solid-warning p-2"
+        alt="retry"
+        title="retry"
       >
-        Retry
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+          />
+        </svg>
       </button>
     </div>
     {{else}}
@@ -46,9 +130,24 @@
       hx-get="/api/sync?cancel={{.ID}}"
       hx-target="#error-notification"
       hx-swap="outerHTML"
-      class="btn btn-solid-error btn-rounded"
+      class="btn-solid-error btn-rounded p-2"
+      alt="cancel"
+      title="cancel"
     >
-      Cancel
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
     </button>
     {{end}}
   </td>
