@@ -1,4 +1,4 @@
-package controller
+package internal
 
 import "flag"
 
@@ -17,6 +17,7 @@ func InitLocalizer() {
 				"destination_details": "Destination Details",
 				"server":              "Server",
 				"account":             "Account",
+				"account_name":        "Username",
 				"password":            "Password",
 				"validate":            "Validate Credentials",
 				"sync":                "Start Synchronization",
@@ -29,6 +30,7 @@ func InitLocalizer() {
 				"password":    "Password",
 			},
 			"admin": {
+				"queue":          "Queue",
 				"index":          "Index",
 				"source_server":  "Source Server",
 				"source_account": "Source Account",
@@ -46,6 +48,12 @@ func InitLocalizer() {
 				"status":         "Status",
 				"actions":        "Actions",
 			},
+			"notify": {
+				"success":     "Successful",
+				"success_msg": " successfully synchronized.",
+				"fail":        "Failed",
+				"fail_msg":    " failed synchronizztion.",
+			},
 		}
 	case "tr":
 		Data = map[string]map[string]string{
@@ -54,6 +62,7 @@ func InitLocalizer() {
 				"destination_details": "Hedef Bilgileri",
 				"server":              "Sunucu",
 				"account":             "Hesap",
+				"account_name":        "Kullanıcı Adı",
 				"password":            "Parola",
 				"validate":            "Bilgileri Doğrula",
 				"sync":                "Senkronizasyonu Başlat",
@@ -66,6 +75,7 @@ func InitLocalizer() {
 				"password":    "Parola",
 			},
 			"admin": {
+				"queue":          "İşlem Kuyruğu",
 				"index":          "Sıra",
 				"source_server":  "Kaynak Sunucu",
 				"source_account": "Kaynak Hesap",
@@ -82,6 +92,12 @@ func InitLocalizer() {
 				"dest_account":   "Hedef Hesap",
 				"status":         "Durum",
 				"actions":        "Eylemler",
+			},
+			"notify": {
+				"success":     "Başarılı",
+				"success_msg": " mail adresleri arasındaki senkronizasyon başarıyla tamamlandı.",
+				"fail":        "Başarısız",
+				"fail_msg":    " mail adresleri arasındaki senkronizasyon başarısız oldu.",
 			},
 		}
 	}

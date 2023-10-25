@@ -39,8 +39,8 @@ func HandleRoot(ctx *gin.Context) {
 	}{
 		SourceDetails:      sourceDetails,
 		DestinationDetails: destinationDetails,
-		Text:               Data["index"],
-		Table:              Data["table"],
+		Text:               internal.Data["index"],
+		Table:              internal.Data["table"],
 	}
 	ctx.HTML(200, "index.html", data)
 }

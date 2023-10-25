@@ -24,8 +24,8 @@ func processPendingTasks() {
 		ctx, cancel = context.WithCancel(context.Background())
 		syncIMAP(ctx, task)
 
-		// simulateTask(task)
-		time.Sleep(1000 * time.Millisecond)
+		// 	simulateTask(task)
+		// time.Sleep(1000 * time.Millisecond)
 	}
 }
 

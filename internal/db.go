@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"reflect"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
@@ -52,6 +53,8 @@ func InitDb() error {
 	destination_account VARCHAR(64) NULL,
 	destination_server VARCHAR(64) NULL,
 	destination_password VARCHAR(64) NULL,
+	started_at INTEGER NULL,
+	ended_at INTEGER NULL,
 	status VARCHAR(64) NULL,
 	logfile VARCHAR(64) NULL
 	);
@@ -141,13 +144,13 @@ func AddTaskToDB(task *Task) error {
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("INSERT INTO tasks(source_account, source_server, source_password, destination_account, destination_server, destination_password, status, logfile) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO tasks(source_account, source_server, source_password, destination_account, destination_server, destination_password, started_at, ended_at, status, logfile) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(task.SourceAccount, task.SourceServer, task.SourcePassword, task.DestinationAccount, task.DestinationServer, task.DestinationPassword, task.Status, task.LogFile)
+	_, err = stmt.Exec(task.SourceAccount, task.SourceServer, task.SourcePassword, task.DestinationAccount, task.DestinationServer, task.DestinationPassword, task.StartedAt, task.EndedAt, task.Status, task.LogFile)
 	if err != nil {
 		return fmt.Errorf("error executing statement: %w", err)
 	}
@@ -163,16 +166,44 @@ func updateTaskStatus(task *Task, status string) error {
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("UPDATE tasks SET status = ? WHERE id = ?")
-	if err != nil {
-		return fmt.Errorf("error preparing statement: %w", err)
-	}
-	defer stmt.Close()
+	var stmt *sql.Stmt
+	timeUnix := time.Now().Unix()
 
-	_, err = stmt.Exec(status, task.ID)
-	if err != nil {
-		return fmt.Errorf("error executing statement: %w", err)
+	if status == "In Progress" {
+		stmt, err = db.Prepare("UPDATE tasks SET started_at = ?, status = ? WHERE id = ?")
+		if err != nil {
+			return fmt.Errorf("error preparing statement: %w", err)
+		}
+		_, err = stmt.Exec(timeUnix, status, task.ID)
+		if err != nil {
+			return fmt.Errorf("error executing statement: %w", err)
+		}
+		task.StartedAt = timeUnix
+	} else {
+		if task.Status == "In Progress" {
+			stmt, err = db.Prepare("UPDATE tasks SET ended_at = ?, status = ? WHERE id = ?")
+			if err != nil {
+				return fmt.Errorf("error preparing statement: %w", err)
+			}
+			_, err = stmt.Exec(timeUnix, status, task.ID)
+			if err != nil {
+				return fmt.Errorf("error executing statement: %w", err)
+			}
+			task.EndedAt = timeUnix
+		} else {
+			stmt, err = db.Prepare("UPDATE tasks SET status = ? WHERE id = ?")
+			if err != nil {
+				return fmt.Errorf("error preparing statement: %w", err)
+			}
+			_, err = stmt.Exec(status, task.ID)
+			if err != nil {
+				return fmt.Errorf("error executing statement: %w", err)
+			}
+
+		}
 	}
+
+	defer stmt.Close()
 
 	task.Status = status
 

@@ -84,13 +84,17 @@ func syncIMAP(ctx context.Context, details *Task) error {
 			return fmt.Errorf("failed to terminate imapsync process: %w", err)
 		}
 		updateTaskStatus(details, "Cancelled")
+		Notify(details, false)
 		return ctx.Err()
 	case err := <-done:
 		if err != nil {
 			updateTaskStatus(details, "Error")
+
+			Notify(details, false)
 			return fmt.Errorf("error running imapsync: %w", err)
 		}
 		updateTaskStatus(details, "Done")
+		Notify(details, true)
 		return nil
 	}
 }

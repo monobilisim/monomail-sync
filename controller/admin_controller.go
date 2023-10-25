@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"imap-sync/internal"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,5 +21,5 @@ func HandleAdmin(ctx *gin.Context) {
 		return
 	}
 
-	ctx.HTML(200, "admin.html", Data["admin"])
+	ctx.HTML(200, "admin.html", internal.Data["admin"])
 }

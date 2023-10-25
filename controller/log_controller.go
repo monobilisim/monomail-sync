@@ -4,6 +4,7 @@ import (
 	"imap-sync/internal"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,5 +25,8 @@ func HandleGetLog(ctx *gin.Context) {
 		ctx.HTML(http.StatusOK, "log_window.html", gin.H{"log": "failed to get log"})
 		return
 	}
-	ctx.HTML(200, "log_window.html", gin.H{"log": logfile})
+
+	startedAt := time.Unix(task.StartedAt, 0)
+	endedAt := time.Unix(task.EndedAt, 0)
+	ctx.HTML(200, "log_window.html", gin.H{"log": logfile, "start": startedAt.Local(), "end": endedAt.Local()})
 }

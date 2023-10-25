@@ -48,7 +48,7 @@
     <!-- Table for showing the queue -->
     <div class="container p-4 mx-auto flex gap-4">
         <div class=" flex w-full overflow-x-auto flex-col">
-            <h2 class="text-4xl m-2">Queue</h2>
+            <h2 class="text-4xl m-2">{{index . "queue"}}</h2>
 
             <!-- Page controls -->
             <div id="pagination" class="pagination m-2" hx-get="/api/pagination?page=1" hx-trigger="load"></div>

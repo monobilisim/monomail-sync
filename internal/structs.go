@@ -9,6 +9,8 @@ type Task struct {
 	DestinationServer   string
 	DestinationPassword string
 	Status              string
+	StartedAt           int64
+	EndedAt             int64
 	LogFile             string
 }
 
