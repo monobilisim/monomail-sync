@@ -1,34 +1,36 @@
 package controller
 
 import (
-	"flag"
+	"imap-sync/config"
 	"imap-sync/internal"
+	"imap-sync/logger"
 
 	"github.com/gin-gonic/gin"
 )
 
-var log = internal.Log
+var log = logger.Log
 
 var (
-	source_server        = flag.String("source_server", "", "Source server")
-	source_account       = flag.String("source_account", "", "Source account")
-	source_password      = flag.String("source_password", "", "Source password")
-	destination_server   = flag.String("destination_server", "", "Destination server")
-	destination_account  = flag.String("destination_account", "", "Destination account")
-	destination_password = flag.String("destination_password", "", "Destination password")
+	source_server       string
+	source_account      string
+	destination_server  string
+	destination_account string
 )
 
 func HandleRoot(ctx *gin.Context) {
+	source_server = config.Conf.SourceAndDestination.SourceServer
+	source_account = config.Conf.SourceAndDestination.SourceMail
+	destination_server = config.Conf.SourceAndDestination.DestinationServer
+	destination_account = config.Conf.SourceAndDestination.DestinationMail
+
 	sourceDetails := internal.Credentials{
-		Server:   *source_server,
-		Account:  *source_account,
-		Password: *source_password,
+		Server:  source_server,
+		Account: source_account,
 	}
 
 	destinationDetails := internal.Credentials{
-		Server:   *destination_server,
-		Account:  *destination_account,
-		Password: *destination_password,
+		Server:  destination_server,
+		Account: destination_account,
 	}
 
 	data := struct {

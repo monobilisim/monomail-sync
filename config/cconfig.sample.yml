@@ -1,0 +1,17 @@
+language: en
+port: 8000
+dataabaseInfo:
+  adminName: admin
+  adminPass: admin
+  databasePath: ./db.db
+sourceAndDestination:
+  SourceServer: imap.example.com
+  SourceMail: "@example.com"
+  DestinationServer: imap.example.com
+  DestinationMail: "@example.com"
+email:
+  SMTPHost: smtp.example.com
+	SMTPPort: 587
+	SMTPFrom: example
+	SMTPUser: example@example.com
+	SMTPPassword: password

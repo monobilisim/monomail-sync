@@ -1,15 +1,18 @@
 package internal
 
-import "flag"
+import (
+	"imap-sync/config"
+)
 
 var (
-	lang = flag.String("lang", "en", "Language")
+	lang string
 	Data map[string]map[string]string
 )
 
 func InitLocalizer() {
+	lang = config.Conf.Language
 
-	switch *lang {
+	switch lang {
 	case "en":
 		Data = map[string]map[string]string{
 			"index": {

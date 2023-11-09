@@ -3,8 +3,9 @@ package internal
 import (
 	"database/sql"
 	"errors"
-	"flag"
 	"fmt"
+	"imap-sync/config"
+	"imap-sync/logger"
 	"reflect"
 	"time"
 
@@ -13,17 +14,21 @@ import (
 )
 
 var (
-	admin_name = flag.String("admin_name", "admin", "Admin username")
-	admin_pass = flag.String("admin_pass", "admin", "Admin password")
-	DB_path    = flag.String("db_path", "./db.db", "Path to database")
+	admin_name string
+	admin_pass string
+	DB_path    string
 )
 
 var db *sql.DB
+var log = logger.Log
 
 func InitDb() error {
+	admin_name = config.Conf.DatabaseInfo.AdminName
+	admin_pass = config.Conf.DatabaseInfo.AdminPass
+	DB_path = config.Conf.DatabaseInfo.DatabasePath
 
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
@@ -72,7 +77,7 @@ func InitDb() error {
 		return fmt.Errorf("error checking if admin exists: %w", err)
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(*admin_pass), 14)
+	password, err := bcrypt.GenerateFromPassword([]byte(admin_pass), 14)
 	if err != nil {
 		return fmt.Errorf("error hashing admin password: %w", err)
 	}
@@ -83,12 +88,12 @@ func InitDb() error {
 			return fmt.Errorf("error creating admin user: %w", err)
 		}
 	} else {
-		dbPass, err := GetPassword(*admin_name)
+		dbPass, err := GetPassword(admin_name)
 		if err != nil {
 			return fmt.Errorf("error getting admin password: %w", err)
 		}
 		if !reflect.DeepEqual(password, []byte(dbPass)) {
-			changePassword(*admin_name, string(password))
+			changePassword(admin_name, string(password))
 		}
 	}
 
@@ -97,7 +102,7 @@ func InitDb() error {
 
 func changePassword(username string, newPassword string) error {
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
@@ -119,7 +124,7 @@ func changePassword(username string, newPassword string) error {
 
 func GetPassword(username string) (string, error) {
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return "", err
 	}
@@ -138,7 +143,7 @@ func GetPassword(username string) (string, error) {
 func AddTaskToDB(task *Task) error {
 	log.Info("Adding task to database")
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
@@ -160,7 +165,7 @@ func AddTaskToDB(task *Task) error {
 
 func updateTaskStatus(task *Task, status string) error {
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
@@ -212,7 +217,7 @@ func updateTaskStatus(task *Task, status string) error {
 
 func updateTaskLogFile(task *Task, logFile string) error {
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
@@ -237,7 +242,7 @@ func updateTaskLogFile(task *Task, logFile string) error {
 func InitializeQueueFromDB() error {
 	log.Info("Initializing queue from database")
 	var err error
-	db, err = sql.Open("sqlite3", *DB_path)
+	db, err = sql.Open("sqlite3", DB_path)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}

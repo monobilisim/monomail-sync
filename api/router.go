@@ -1,19 +1,21 @@
 package api
 
 import (
-	"flag"
+	"imap-sync/config"
 	"imap-sync/controller"
 	"imap-sync/internal"
+	"imap-sync/logger"
 
 	"github.com/gin-gonic/gin"
 	ginsession "github.com/go-session/gin-session"
 )
 
-var log = internal.Log
-var port = flag.String("port", "8080", "Port to listen on")
+var log = logger.Log
+var port string
 
 func InitServer() {
-	internal.SetupLogger()
+	port = config.Conf.Port
+	logger.SetupLogger()
 	err := internal.InitDb()
 	if err != nil {
 		log.Error(err)
@@ -47,9 +49,9 @@ func InitServer() {
 	router.POST("/api/search", controller.HandleSearch)
 	router.POST("/auth/login", controller.Login)
 
-	log.Info("Server starting on http://localhost:" + *port)
+	log.Info("Server starting on http://localhost:" + port)
 
-	if err := router.Run(":" + *port); err != nil {
+	if err := router.Run(":" + port); err != nil {
 		log.Fatal(err)
 	}
 }
