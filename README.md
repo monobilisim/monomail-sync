@@ -14,8 +14,8 @@
   <img src="https://monobilisim.com.tr/images/mono-bilisim.svg" width="340"/>
 </a>
 
-<h2 align="center">imapsync-web</h2>
-<b>imapsync-web</b> imapsync-web is a web interface for imapsync, providing an enterprise-ready UI for synchronizing IMAP mailboxes. This application allows admins to configure and run imapsync jobs through a browser, making it easy to keep multiple mail stores in sync. 
+<h2 align="center">monomail-sync</h2>
+<b>monomail-sync</b> monomail-sync is a web interface for imapsync, providing an enterprise-ready UI for synchronizing IMAP mailboxes. This application allows admins to configure and run imapsync jobs through a browser, making it easy to keep multiple mail stores in sync. 
 </div>
 
 ---
@@ -54,15 +54,15 @@ go run .
 
 ## License
 
-inapsync-web is GPL-3.0 licensed. See [LICENSE](LICENSE) file for details.
+monomail-sync is GPL-3.0 licensed. See [LICENSE](LICENSE) file for details.
 
-[contributors-shield]: https://img.shields.io/github/contributors/monobilisim/imapsync-web.svg?style=for-the-badge
-[contributors-url]: https://github.com/monobilisim/imapsync-web/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/monobilisim/imapsync-web.svg?style=for-the-badge
-[forks-url]: https://github.com/monobilisim/imapsync-web/network/members
-[stars-shield]: https://img.shields.io/github/stars/monobilisim/imapsync-web.svg?style=for-the-badge
-[stars-url]: https://github.com/monobilisim/imapsync-web/stargazers
-[issues-shield]: https://img.shields.io/github/issues/monobilisim/imapsync-web.svg?style=for-the-badge
-[issues-url]: https://github.com/monobilisim/imapsync-web/issues
-[license-shield]: https://img.shields.io/github/license/monobilisim/imapsync-web.svg?style=for-the-badge
-[license-url]: https://github.com/monobilisim/imapsync-web/blob/master/LICENSE
+[contributors-shield]: https://img.shields.io/github/contributors/monobilisim/.svg?style=for-the-badge
+[contributors-url]: https://github.com/monobilisim//graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/monobilisim/.svg?style=for-the-badge
+[forks-url]: https://github.com/monobilisim//network/members
+[stars-shield]: https://img.shields.io/github/stars/monobilisim/.svg?style=for-the-badge
+[stars-url]: https://github.com/monobilisim//stargazers
+[issues-shield]: https://img.shields.io/github/issues/monobilisim/monomail-sync.svg?style=for-the-badge
+[issues-url]: https://github.com/monobilisim/monomail-sync/issues
+[license-shield]: https://img.shields.io/github/license/monobilisim/monomail-sync.svg?style=for-the-badge
+[license-url]: https://github.com/monobilisim/monomail-sync/blob/master/LICENSE
