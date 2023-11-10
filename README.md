@@ -57,11 +57,11 @@ go run .
 monomail-sync is GPL-3.0 licensed. See [LICENSE](LICENSE) file for details.
 
 [contributors-shield]: https://img.shields.io/github/contributors/monobilisim/.svg?style=for-the-badge
-[contributors-url]: https://github.com/monobilisim//graphs/contributors
+[contributors-url]: https://github.com/monobilisim/monomail-sync/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/monobilisim/.svg?style=for-the-badge
-[forks-url]: https://github.com/monobilisim//network/members
+[forks-url]: https://github.com/monobilisim/monomail-sync/network/members
 [stars-shield]: https://img.shields.io/github/stars/monobilisim/.svg?style=for-the-badge
-[stars-url]: https://github.com/monobilisim//stargazers
+[stars-url]: https://github.com/monobilisim/monomail-sync/stargazers
 [issues-shield]: https://img.shields.io/github/issues/monobilisim/monomail-sync.svg?style=for-the-badge
 [issues-url]: https://github.com/monobilisim/monomail-sync/issues
 [license-shield]: https://img.shields.io/github/license/monobilisim/monomail-sync.svg?style=for-the-badge
