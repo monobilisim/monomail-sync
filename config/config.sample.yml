@@ -11,7 +11,7 @@ sourceAndDestination:
   DestinationMail: "@example.com"
 email:
   SMTPHost: smtp.example.com
-	SMTPPort: 587
-	SMTPFrom: example
-	SMTPUser: example@example.com
-	SMTPPassword: password
+  SMTPPort: 587
+  SMTPFrom: example
+  SMTPUser: example@example.com
+  SMTPPassword: password
