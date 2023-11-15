@@ -1,6 +1,6 @@
 language: en
 port: 8000
-dataabaseInfo:
+databaseInfo:
   adminName: admin
   adminPass: admin
   databasePath: ./db.db
