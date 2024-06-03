@@ -59,6 +59,7 @@ func syncIMAP(ctx context.Context, details *Task) error {
 		"--host2", details.DestinationServer,
 		"--user2", details.DestinationAccount,
 		"--password2", details.DestinationPassword,
+		"--addheader",
 		"--logfile", logname)
 
 	updateTaskLogFile(details, logname)
