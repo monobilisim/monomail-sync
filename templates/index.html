@@ -65,6 +65,34 @@
       </div>
     </div>
 
+    <!-- Dashboard Stats -->
+    <div class="container px-4 mt-4">
+        <div class="flex justify-end">
+            <div class="grid grid-cols-5 gap-4 w-full max-w-4xl">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                    <div class="text-gray-500 text-xs">Total</div>
+                    <div class="text-2xl font-bold" id="stat-total">0</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                    <div class="text-gray-500 text-xs">Completed</div>
+                    <div class="text-2xl font-bold text-success" id="stat-completed">0</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                    <div class="text-gray-500 text-xs">Failed</div>
+                    <div class="text-2xl font-bold text-error" id="stat-failed">0</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                    <div class="text-gray-500 text-xs">In Progress</div>
+                    <div class="text-2xl font-bold text-warning" id="stat-in-progress">0</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                    <div class="text-gray-500 text-xs">Success</div>
+                    <div class="text-2xl font-bold text-info" id="stat-success-rate">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- imap sync form -->
     <form
       hx-post="/api/validate"
@@ -81,6 +109,23 @@
           {{index .Text "source_details"}}
         </h2>
         <div class="grid gap-4 form-group">
+          <div>
+            <label for="source_provider" class="block font-semibold"
+              >Provider</label
+            >
+            <select id="source_provider" class="select select-bordered w-full max-w-full" x-model="source_provider" @change="updateSourceFromProvider()">
+              <option value="Custom">Custom</option>
+              <option value="Gmail">Gmail</option>
+              <option value="Google Workspace">Google Workspace</option>
+              <option value="Outlook">Outlook</option>
+              <option value="Yahoo">Yahoo</option>
+              <option value="Yandex">Yandex</option>
+              <option value="Zoho Mail">Zoho Mail</option>
+              <option value="iCloud">iCloud</option>
+              <option value="GMX">GMX</option>
+              <option value="ProtonMail">ProtonMail</option>
+            </select>
+          </div>
           <div class="form-field">
             <label for="source_server" class="block font-semibold"
               >{{index .Text "server"}}</label
@@ -90,9 +135,8 @@
               x-model="source_server"
               id="source_server"
               name="source_server"
-              placeholder="Source Server"
+              placeholder="imap.example.com:993"
               class="input max-w-full input-solid"
-              readonly
               value="{{.SourceDetails.Server}}"
             />
           </div>
@@ -100,13 +144,14 @@
             <label for="source_account" class="block font-semibold"
               >{{index .Text "account"}}</label
             >
-            <div class="relative w-full">
-              <input type="text" id="source_account" placeholder="{{index .Text
-              "account_name"}}" class="input max-w-full" />
-              <span class="absolute inset-y-0 right-4 inline-flex items-center"
-                >{{.SourceDetails.Account}}</span
-              >
-              <input type="hidden" id="hiddenSource" name="source_account" />
+            <div class="flex gap-2">
+              <input type="text" id="source_account" name="source_account" 
+                placeholder="user@example.com" class="input max-w-full flex-1" />
+              <button type="button" @click="showBulkModal = true" class="btn btn-secondary" title="Bulk Import">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </button>
             </div>
           </div>
           <div>
@@ -122,6 +167,10 @@
               value=""
             />
           </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="source_use_tls" class="checkbox" x-model="source_use_tls">
+            <label for="source_use_tls">Use TLS/SSL</label>
+          </div>
         </div>
       </div>
       <!-- Destination details -->
@@ -132,6 +181,23 @@
           {{index .Text "destination_details"}}
         </h2>
         <div class="grid gap-4 form-group">
+          <div>
+            <label for="destination_provider" class="block font-semibold"
+              >Provider</label
+            >
+            <select id="destination_provider" class="select select-bordered w-full max-w-full" x-model="destination_provider" @change="updateDestinationFromProvider()">
+              <option value="Custom">Custom</option>
+              <option value="Gmail">Gmail</option>
+              <option value="Google Workspace">Google Workspace</option>
+              <option value="Outlook">Outlook</option>
+              <option value="Yahoo">Yahoo</option>
+              <option value="Yandex">Yandex</option>
+              <option value="Zoho Mail">Zoho Mail</option>
+              <option value="iCloud">iCloud</option>
+              <option value="GMX">GMX</option>
+              <option value="ProtonMail">ProtonMail</option>
+            </select>
+          </div>
           <div class="form-field">
             <label for="destination_server" class="block font-semibold"
               >{{index .Text "server"}}</label
@@ -141,9 +207,8 @@
               x-model="destination_server"
               id="destination_server"
               name="destination_server"
-              placeholder="Destination Server"
+              placeholder="imap.example.com:993"
               class="input max-w-full input-solid"
-              readonly
               value="{{.DestinationDetails.Server}}"
             />
           </div>
@@ -151,18 +216,8 @@
             <label for="destination_account" class="block font-semibold"
               >{{index .Text "account"}}</label
             >
-            <div class="relative w-full">
-              <input type="text" id="destination_account" placeholder="{{index
-              .Text "account_name"}}" class="input max-w-full" />
-              <span class="absolute inset-y-0 right-4 inline-flex items-center"
-                >{{.DestinationDetails.Account}}</span
-              >
-              <input
-                type="hidden"
-                id="hiddenDestination"
-                name="destination_account"
-              />
-            </div>
+            <input type="text" id="destination_account" name="destination_account" 
+              placeholder="user@example.com" class="input max-w-full" />
           </div>
           <div>
             <label for="destination_password" class="block font-semibold"
@@ -177,6 +232,10 @@
               value=""
             />
           </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="destination_use_tls" class="checkbox" x-model="destination_use_tls">
+            <label for="destination_use_tls">Use TLS/SSL</label>
+          </div>
         </div>
       </div>
     </form>
@@ -190,6 +249,31 @@
     </div>
 
     <!-- Log output -->
+    <div class="container mx-auto flex px-4 mt-4">
+      <div class="w-full">
+        <button @click="showMigrationPanel = !showMigrationPanel" class="btn btn-outline btn-primary w-full justify-between">
+          <span class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Bulk Migrations
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform" :class="showMigrationPanel ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <div x-show="showMigrationPanel" x-collapse class="mt-2">
+          <div class="bg-backgroundSecondary border border-border rounded-lg p-4">
+            <div id="migration-list" class="space-y-3 max-h-80 overflow-y-auto">
+              <p class="text-gray-500 text-center py-4">No active migrations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Queue -->
     <div class="container mx-auto flex px-4">
       <div
         class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg"
@@ -227,6 +311,80 @@
             </tbody>
           </table>
         </div>
+        <div x-show="currentMigrationId" class="mt-4">
+          <div class="bg-backgroundSecondary border border-border rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Bulk Migration Progress
+              </h3>
+              <button @click="currentMigrationId = null" class="btn btn-sm btn-ghost">Clear</button>
+            </div>
+            <div id="bulk-progress-container" class="space-y-3 max-h-64 overflow-y-auto">
+              <!-- Bulk migration status will be rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Migration Modal -->
+    <div x-show="showBulkModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+      <div class="bg-backgroundSecondary p-6 rounded-xl shadow-2xl w-full max-w-2xl" @click.outside="showBulkModal = false">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Bulk Mail Migration
+          </h2>
+          <button @click="showBulkModal = false" class="btn btn-sm btn-circle btn-ghost">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <form id="bulk-migration-form" class="space-y-5">
+          <div class="grid grid-cols-2 gap-4 p-4 bg-background rounded-lg">
+            <div class="space-y-2">
+              <label class="block font-semibold text-sm">Source Server</label>
+              <input type="text" id="bulk_source_server" class="input input-bordered w-full" placeholder="imap.example.com:993">
+            </div>
+            <div class="space-y-2">
+              <label class="block font-semibold text-sm">Destination Server</label>
+              <input type="text" id="bulk_destination_server" class="input input-bordered w-full" placeholder="imap.example.com:993">
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="checkbox" id="bulk_source_tls" class="checkbox checkbox-primary" checked>
+              <label class="text-sm">TLS/SSL</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="checkbox" id="bulk_destination_tls" class="checkbox checkbox-primary" checked>
+              <label class="text-sm">TLS/SSL</label>
+            </div>
+          </div>
+          
+          <div class="space-y-2">
+            <label class="block font-semibold">Accounts (CSV)</label>
+            <p class="text-xs text-gray-500">Format: source_user,source_password,destination_user,destination_password</p>
+            <textarea id="bulk_accounts" class="textarea textarea-bordered w-full h-48 font-mono text-sm" style="min-width: 100%;" placeholder="user1@source.com,pass1,user1@dest.com,pass1
+user2@source.com,pass2,user2@dest.com,pass2"></textarea>
+          </div>
+          
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" @click="showBulkModal = false" class="btn btn-ghost">Cancel</button>
+            <button type="submit" class="btn text-white hover:text-white" style="background-color: #22c55e; border-color: #22c55e;" onmouseover="this.style.backgroundColor='#16a34a'" onmouseout="this.style.backgroundColor='#22c55e'">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Start Migration
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -277,18 +435,43 @@
     </div>
 
     <script>
-      var inputSource = document.querySelector("#source_account");
-      var hiddenSource = document.querySelector("#hiddenSource");
-      var inputDestination = document.querySelector("#destination_account");
-      var hiddenDestination = document.querySelector("#hiddenDestination");
+      document.getElementById('bulk-migration-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const sourceServer = document.getElementById('bulk_source_server').value;
+        const sourceTLS = document.getElementById('bulk_source_tls').checked;
+        const destinationServer = document.getElementById('bulk_destination_server').value;
+        const destinationTLS = document.getElementById('bulk_destination_tls').checked;
+        const accounts = document.getElementById('bulk_accounts').value;
 
-      inputSource.addEventListener("input", function () {
-        hiddenSource.value = inputSource.value + "{{.SourceDetails.Account}}";
-      });
+        if (!sourceServer || !destinationServer || !accounts) {
+          alert('Please fill all fields');
+          return;
+        }
 
-      inputDestination.addEventListener("input", function () {
-        hiddenDestination.value =
-          inputDestination.value + "{{.DestinationDetails.Account}}";
+        try {
+          const response = await fetch('/api/bulk', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              source_server: sourceServer,
+              source_use_tls: sourceTLS,
+              destination_server: destinationServer,
+              destination_use_tls: destinationTLS,
+              accounts: accounts
+            })
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            document.getElementById('bulk-migration-form').reset();
+            window.location.reload();
+          } else {
+            alert('Error: ' + data.error);
+          }
+        } catch (err) {
+          alert('Error starting migration: ' + err);
+        }
       });
 
       function hideNotification() {
@@ -348,27 +531,67 @@
       document.addEventListener("alpine:init", () => {
         Alpine.data("data", () => ({
           model_open: "",
+          showBulkModal: false,
+          source_provider: "Custom",
           source_server: "{{.SourceDetails.Server}}",
-          source_account: "{{.SourceDetails.Account}}",
+          source_use_tls: false,
+          destination_provider: "Custom",
           destination_server: "{{.DestinationDetails.Server}}",
-          destination_account: "{{.DestinationDetails.Account}}",
+          destination_use_tls: false,
 
           validated: false,
+          showMigrationPanel: false,
+          currentMigrationId: null,
+          migrationInterval: null,
+          migrations: [],
+
+          providers: {
+            "Custom": { host: "", port: 993, useTLS: false },
+            "Gmail": { host: "imap.gmail.com", port: 993, useTLS: true },
+            "Google Workspace": { host: "imap.gmail.com", port: 993, useTLS: true },
+            "Outlook": { host: "outlook.office365.com", port: 993, useTLS: true },
+            "Yahoo": { host: "imap.mail.yahoo.com", port: 993, useTLS: true },
+            "Yandex": { host: "imap.yandex.com", port: 993, useTLS: true },
+            "Zoho Mail": { host: "imap.zoho.com", port: 993, useTLS: true },
+            "iCloud": { host: "imap.mail.me.com", port: 993, useTLS: true },
+            "GMX": { host: "imap.gmx.com", port: 993, useTLS: true },
+            "ProtonMail": { host: "127.0.0.1", port: 1143, useTLS: false }
+          },
+
+          updateSourceFromProvider() {
+            const provider = this.providers[this.source_provider];
+            if (this.source_provider === 'Custom') {
+              this.source_server = '';
+              this.source_use_tls = false;
+            } else {
+              this.source_server = provider.host + ":" + provider.port;
+              this.source_use_tls = provider.useTLS;
+            }
+          },
+
+          updateDestinationFromProvider() {
+            const provider = this.providers[this.destination_provider];
+            if (this.destination_provider === 'Custom') {
+              this.destination_server = '';
+              this.destination_use_tls = false;
+            } else {
+              this.destination_server = provider.host + ":" + provider.port;
+              this.destination_use_tls = provider.useTLS;
+            }
+          },
 
           showQueue() {
             if (this.validated === true) {
               htmx.ajax(
                 "POST",
                 "/api/search?exact=true&source_server=" +
-                  this.source_server +
+                  encodeURIComponent(this.source_server) +
                   "&source_account=" +
-                  document.getElementById("source_account").value +
-                  this.source_account +
+                  encodeURIComponent(document.getElementById("source_account").value) +
                   "&destination_server=" +
-                  this.destination_server +
+                  encodeURIComponent(this.destination_server) +
                   "&destination_account=" +
-                  document.getElementById("destination_account").value +
-                  this.destination_account +
+                  encodeURIComponent(document.getElementById("destination_account").value) +
                   "",
                 { target: "#table-body", swap: "innerHTML" }
               );
@@ -379,11 +602,175 @@
             setInterval(() => {
               this.showQueue();
             }, 2000);
+            
+            this.fetchAllMigrations();
+            this.fetchStats();
+            setInterval(() => {
+              this.fetchStats();
+            }, 5000);
+          },
+
+          async fetchStats() {
+            try {
+              const response = await fetch('/api/stats');
+              const stats = await response.json();
+              document.getElementById('stat-total').textContent = stats.total_tasks || 0;
+              document.getElementById('stat-completed').textContent = stats.completed_tasks || 0;
+              document.getElementById('stat-failed').textContent = stats.failed_tasks || 0;
+              document.getElementById('stat-in-progress').textContent = stats.in_progress_tasks || 0;
+              document.getElementById('stat-success-rate').textContent = (stats.success_rate || 0).toFixed(1) + '%';
+            } catch (e) {
+              console.error('Error fetching stats:', e);
+            }
           },
 
           update_status(result) {
             this.validated = result;
             this.showQueue();
+          },
+
+          async startBulkMigration() {
+            const sourceServer = document.getElementById('bulk_source_server').value;
+            const sourceTLS = document.getElementById('bulk_source_tls').checked;
+            const destinationServer = document.getElementById('bulk_destination_server').value;
+            const destinationTLS = document.getElementById('bulk_destination_tls').checked;
+            const accounts = document.getElementById('bulk_accounts').value;
+
+            if (!sourceServer || !destinationServer || !accounts) {
+              alert('Please fill all fields');
+              return;
+            }
+
+            try {
+              const response = await fetch('/api/bulk', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                  source_server: sourceServer,
+                  source_use_tls: sourceTLS,
+                  destination_server: destinationServer,
+                  destination_use_tls: destinationTLS,
+                  accounts: accounts
+                })
+              });
+
+              const data = await response.json();
+              if (response.ok) {
+                this.currentMigrationId = data.migration_id;
+                this.showMigrationPanel = true;
+                this.showBulkModal = false;
+                this.startMigrationPolling();
+                this.fetchAllMigrations();
+              } else {
+                alert('Error: ' + data.error);
+              }
+            } catch (err) {
+              alert('Error starting migration: ' + err);
+            }
+          },
+
+          startMigrationPolling() {
+            if (this.migrationInterval) clearInterval(this.migrationInterval);
+            
+            this.migrationInterval = setInterval(() => {
+              this.updateMigrationStatus();
+              this.fetchAllMigrations();
+            }, 2000);
+          },
+
+          async fetchAllMigrations() {
+            // For now, just show current migration
+            if (this.currentMigrationId) {
+              this.updateMigrationStatus();
+            }
+          },
+
+          async updateMigrationStatus() {
+            if (!this.currentMigrationId) return;
+
+            try {
+              const response = await fetch(`/api/bulk/status?id=${this.currentMigrationId}`);
+              const data = await response.json();
+              
+              if (!response.ok) {
+                clearInterval(this.migrationInterval);
+                return;
+              }
+
+              this.renderBulkProgress(data);
+            } catch (err) {
+              console.error('Error fetching migration status:', err);
+            }
+          },
+
+          renderBulkProgress(data) {
+            const container = document.getElementById('bulk-progress-container');
+            if (!container) return;
+
+            let completed = 0;
+            let failed = 0;
+            let syncing = 0;
+            let validating = 0;
+
+            let html = '';
+            data.accounts.forEach((account, index) => {
+              const statusClass = account.status === 'completed' ? 'bg-success' : 
+                                  account.status === 'failed' ? 'bg-error' : 
+                                  account.status === 'syncing' ? 'bg-info' : 'bg-base-300';
+              const statusIcon = account.status === 'completed' ? 
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' :
+                account.status === 'failed' ? 
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>' :
+                account.status === 'syncing' ?
+                '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>' :
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+
+              const statusText = account.status === 'completed' ? 'Completed' : 
+                               account.status === 'failed' ? 'Failed' :
+                               account.status === 'validating' ? 'Validating...' : 
+                               account.status === 'syncing' ? 'Syncing...' : 'Pending';
+
+              const errorText = account.error ? `<p class="text-xs text-error mt-1">${account.error}</p>` : '';
+
+              if (account.status === 'completed') completed++;
+              else if (account.status === 'failed') failed++;
+              else if (account.status === 'syncing') syncing++;
+              else if (account.status === 'validating') validating++;
+              
+              html += `
+                <div class="flex items-center gap-3 p-3 bg-base rounded-lg border border-border">
+                  <div class="text-${account.status === 'completed' ? 'success' : account.status === 'failed' ? 'error' : 'neutral'}">
+                    ${statusIcon}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium truncate">${account.source_user}</span>
+                      <span class="text-xs text-gray-500">→</span>
+                      <span class="font-medium truncate">${account.destination_user}</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                      <progress class="progress ${statusClass} w-full h-2" value="${account.progress}" max="100"></progress>
+                      <span class="text-xs whitespace-nowrap">${statusText}</span>
+                    </div>
+                    ${errorText}
+                  </div>
+                </div>
+              `;
+            });
+
+            const summaryHtml = `<div class="flex gap-4 text-sm mb-3">
+              <span class="text-success">✓ ${completed} completed</span>
+              <span class="text-error">✗ ${failed} failed</span>
+              <span class="text-info">↻ ${syncing} syncing</span>
+              <span class="text-gray-500">○ ${validating} pending</span>
+            </div>`;
+
+            container.innerHTML = summaryHtml + html;
+
+            const allCompleted = data.accounts.every(a => a.status === 'completed' || a.status === 'failed');
+            if (allCompleted) {
+              clearInterval(this.migrationInterval);
+            }
           },
         }));
       });

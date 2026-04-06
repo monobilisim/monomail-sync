@@ -12,14 +12,28 @@ type TableData struct {
 	TableColumnNum int
 }
 
+type AdminData struct {
+	Settings *internal.Settings
+	Data     map[string]string
+}
+
 func HandleAdmin(ctx *gin.Context) {
 	store := ginsession.FromContext(ctx)
 	_, ok := store.Get("user")
 	if !ok {
-		// User is not logged in, redirect them to the login page
 		ctx.Redirect(http.StatusTemporaryRedirect, "/login")
 		return
 	}
 
-	ctx.HTML(200, "admin.html", internal.Data["admin"])
+	settings, err := internal.GetSettings()
+	if err != nil {
+		settings = &internal.Settings{}
+	}
+
+	adminData := AdminData{
+		Settings: settings,
+		Data:     internal.Data["admin"],
+	}
+
+	ctx.HTML(200, "admin.html", adminData)
 }

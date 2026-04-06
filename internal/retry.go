@@ -5,7 +5,10 @@ func RetryTask(task *Task) {
 	newTask.Status = "Pending"
 	newTask.ID = queue.Len() + 1
 	queue.PushFront(&newTask)
-	AddTaskToDB(task)
+	if err := AddTaskToDB(&newTask); err != nil {
+		log.Errorf("Failed to persist retried task: %v", err)
+		return
+	}
 	go func() {
 		taskChan <- newTask
 	}()

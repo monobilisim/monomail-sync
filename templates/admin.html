@@ -45,6 +45,134 @@
     <!-- Header -->
     {{template "admin_navbar.html"}}
 
+    <!-- Dashboard Stats -->
+    <div class="container p-4 mx-auto">
+        <div class="flex justify-center">
+            <div class="grid grid-cols-5 gap-4 w-full max-w-4xl">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                    <div class="text-gray-500 text-sm text-center">Total Tasks</div>
+                    <div class="text-3xl font-bold text-center" id="stat-total">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                    <div class="text-gray-500 text-sm text-center">Completed</div>
+                    <div class="text-3xl font-bold text-success text-center" id="stat-completed">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                    <div class="text-gray-500 text-sm text-center">Failed</div>
+                    <div class="text-3xl font-bold text-error text-center" id="stat-failed">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                    <div class="text-gray-500 text-sm text-center">In Progress</div>
+                    <div class="text-3xl font-bold text-warning text-center" id="stat-in-progress">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                    <div class="text-gray-500 text-sm text-center">Success Rate</div>
+                    <div class="text-3xl font-bold text-info text-center" id="stat-success-rate">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Info -->
+    <div class="container p-4 mx-auto">
+        <div class="flex justify-center">
+            <div class="grid grid-cols-4 gap-4 w-full max-w-4xl">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 shadow-md">
+                    <div class="text-gray-500 text-xs text-center">Version</div>
+                    <div class="text-xl font-bold text-center" id="sys-version">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 shadow-md">
+                    <div class="text-gray-500 text-xs text-center">Uptime</div>
+                    <div class="text-xl font-bold text-center" id="sys-uptime">-</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 shadow-md">
+                    <div class="text-gray-500 text-xs text-center">Memory</div>
+                    <div class="text-xl font-bold text-center" id="sys-memory">- MB</div>
+                </div>
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 shadow-md">
+                    <div class="text-gray-500 text-xs text-center">Goroutines</div>
+                    <div class="text-xl font-bold text-center" id="sys-goroutines">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="container p-4 mx-auto">
+        <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+            <h2 class="text-2xl font-semibold mb-4">IMAP Settings</h2>
+            <form id="settings-form" class="grid gap-4">
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Source Settings -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b pb-2">Source</h3>
+                        <div>
+                            <label class="block font-semibold">Provider</label>
+                            <select id="source_provider" class="select select-bordered w-full" onchange="updateSourceFromProvider()">
+                                <option value="Custom">Custom</option>
+                                <option value="Gmail">Gmail</option>
+                                <option value="Google Workspace">Google Workspace</option>
+                                <option value="Outlook">Outlook</option>
+                                <option value="Yahoo">Yahoo</option>
+                                <option value="Yandex">Yandex</option>
+                                <option value="Zoho Mail">Zoho Mail</option>
+                                <option value="iCloud">iCloud</option>
+                                <option value="GMX">GMX</option>
+                                <option value="ProtonMail">ProtonMail</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold">Server</label>
+                            <input type="text" id="source_server" class="input max-w-full" value="{{.Settings.SourceServer}}">
+                        </div>
+                        <div>
+                            <label class="block font-semibold">Account Prefix</label>
+                            <input type="text" id="source_account_prefix" class="input max-w-full" value="{{.Settings.SourceAccountPrefix}}">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="source_use_tls" class="checkbox" {{if .Settings.SourceUseTLS}}checked{{end}}>
+                            <label for="source_use_tls">Use TLS/SSL</label>
+                        </div>
+                    </div>
+                    <!-- Destination Settings -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b pb-2">Destination</h3>
+                        <div>
+                            <label class="block font-semibold">Provider</label>
+                            <select id="destination_provider" class="select select-bordered w-full" onchange="updateDestinationFromProvider()">
+                                <option value="Custom">Custom</option>
+                                <option value="Gmail">Gmail</option>
+                                <option value="Google Workspace">Google Workspace</option>
+                                <option value="Outlook">Outlook</option>
+                                <option value="Yahoo">Yahoo</option>
+                                <option value="Yandex">Yandex</option>
+                                <option value="Zoho Mail">Zoho Mail</option>
+                                <option value="iCloud">iCloud</option>
+                                <option value="GMX">GMX</option>
+                                <option value="ProtonMail">ProtonMail</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold">Server</label>
+                            <input type="text" id="destination_server" class="input max-w-full" value="{{.Settings.DestinationServer}}">
+                        </div>
+                        <div>
+                            <label class="block font-semibold">Account Prefix</label>
+                            <input type="text" id="destination_account_prefix" class="input max-w-full" value="{{.Settings.DestinationAccountPrefix}}">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="destination_use_tls" class="checkbox" {{if .Settings.DestinationUseTLS}}checked{{end}}>
+                            <label for="destination_use_tls">Use TLS/SSL</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Table for showing the queue -->
     <div class="container p-4 mx-auto flex gap-4">
         <div class=" flex w-full overflow-x-auto flex-col">
@@ -71,6 +199,33 @@
                     {{template "tbody.html" .}}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- Sessions & Audit Log Section -->
+    <div class="container p-4 mx-auto">
+        <div class="tabs tabs-boxed mb-4">
+            <a class="tab" onclick="showTab('sessions')">Sessions</a>
+            <a class="tab" onclick="showTab('audit')">Audit Log</a>
+        </div>
+
+        <!-- Sessions Panel -->
+        <div id="sessions-panel" class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Active Sessions</h3>
+                <button onclick="terminateAllSessions()" class="btn btn-error btn-sm">Terminate All</button>
+            </div>
+            <div id="sessions-list" class="space-y-2">
+                <p class="text-gray-500">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Audit Log Panel -->
+        <div id="audit-panel" class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md" style="display: none;">
+            <h3 class="text-xl font-semibold mb-4">Audit Log</h3>
+            <div id="audit-list" class="space-y-2 max-h-96 overflow-y-auto">
+                <p class="text-gray-500">Loading...</p>
+            </div>
         </div>
     </div>
 
@@ -101,6 +256,191 @@
     </div>
 
     <script>
+        const providers = {
+            "Custom": { host: "", port: 993, useTLS: false },
+            "Gmail": { host: "imap.gmail.com", port: 993, useTLS: true },
+            "Google Workspace": { host: "imap.gmail.com", port: 993, useTLS: true },
+            "Outlook": { host: "outlook.office365.com", port: 993, useTLS: true },
+            "Yahoo": { host: "imap.mail.yahoo.com", port: 993, useTLS: true },
+            "Yandex": { host: "imap.yandex.com", port: 993, useTLS: true },
+            "Zoho Mail": { host: "imap.zoho.com", port: 993, useTLS: true },
+            "iCloud": { host: "imap.mail.me.com", port: 993, useTLS: true },
+            "GMX": { host: "imap.gmx.com", port: 993, useTLS: true },
+            "ProtonMail": { host: "127.0.0.1", port: 1143, useTLS: false }
+        };
+
+        function updateSourceFromProvider() {
+            const select = document.getElementById('source_provider');
+            const provider = providers[select.value];
+            if (select.value === 'Custom') {
+                document.getElementById('source_server').value = '';
+                document.getElementById('source_use_tls').checked = false;
+            } else {
+                document.getElementById('source_server').value = provider.host + ":" + provider.port;
+                document.getElementById('source_use_tls').checked = provider.useTLS;
+            }
+        }
+
+        function updateDestinationFromProvider() {
+            const select = document.getElementById('destination_provider');
+            const provider = providers[select.value];
+            if (select.value === 'Custom') {
+                document.getElementById('destination_server').value = '';
+                document.getElementById('destination_use_tls').checked = false;
+            } else {
+                document.getElementById('destination_server').value = provider.host + ":" + provider.port;
+                document.getElementById('destination_use_tls').checked = provider.useTLS;
+            }
+        }
+
+        document.getElementById('settings-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const settings = {
+                SourceServer: document.getElementById('source_server').value,
+                SourceAccountPrefix: document.getElementById('source_account_prefix').value,
+                SourceUseTLS: document.getElementById('source_use_tls').checked,
+                DestinationServer: document.getElementById('destination_server').value,
+                DestinationAccountPrefix: document.getElementById('destination_account_prefix').value,
+                DestinationUseTLS: document.getElementById('destination_use_tls').checked,
+            };
+            
+            const response = await fetch('/api/settings', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(settings)
+            });
+            
+            if (response.ok) {
+                alert('Settings saved successfully');
+            } else {
+                alert('Error saving settings');
+            }
+        });
+
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const stats = await response.json();
+                document.getElementById('stat-total').textContent = stats.total_tasks || 0;
+                document.getElementById('stat-completed').textContent = stats.completed_tasks || 0;
+                document.getElementById('stat-failed').textContent = stats.failed_tasks || 0;
+                document.getElementById('stat-in-progress').textContent = stats.in_progress_tasks || 0;
+                document.getElementById('stat-success-rate').textContent = (stats.success_rate || 0).toFixed(1) + '%';
+            } catch (e) {
+                console.error('Error fetching stats:', e);
+            }
+        }
+
+        async function fetchSystemInfo() {
+            try {
+                const response = await fetch('/api/system');
+                const sys = await response.json();
+                document.getElementById('sys-version').textContent = sys.version || '-';
+                document.getElementById('sys-uptime').textContent = sys.uptime || '-';
+                document.getElementById('sys-memory').textContent = (sys.memory_alloc || 0) + ' MB';
+                document.getElementById('sys-goroutines').textContent = sys.goroutines || '-';
+            } catch (e) {
+                console.error('Error fetching system info:', e);
+            }
+        }
+
+        fetchStats();
+        fetchSystemInfo();
+        setInterval(fetchStats, 5000);
+        setInterval(fetchSystemInfo, 10000);
+
+        function showTab(tabName) {
+            document.getElementById('sessions-panel').style.display = tabName === 'sessions' ? 'block' : 'none';
+            document.getElementById('audit-panel').style.display = tabName === 'audit' ? 'block' : 'none';
+        }
+
+        async function fetchSessions() {
+            try {
+                const response = await fetch('/api/sessions');
+                const sessions = await response.json();
+                const container = document.getElementById('sessions-list');
+                
+                if (sessions.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500">No active sessions</p>';
+                    return;
+                }
+
+                let html = '';
+                sessions.forEach(s => {
+                    const created = new Date(s.created_at * 1000).toLocaleString();
+                    const lastActivity = new Date(s.last_activity * 1000).toLocaleString();
+                    html += `
+                        <div class="flex items-center justify-between p-3 bg-base rounded-lg border border-border">
+                            <div>
+                                <div class="font-semibold">${s.user}</div>
+                                <div class="text-sm text-gray-500">IP: ${s.ip_address}</div>
+                                <div class="text-xs text-gray-400">Last activity: ${lastActivity}</div>
+                            </div>
+                            <button onclick="terminateSession(${s.id})" class="btn btn-error btn-sm">Terminate</button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Error fetching sessions:', e);
+            }
+        }
+
+        async function terminateSession(id) {
+            if (!confirm('Terminate this session?')) return;
+            try {
+                await fetch('/api/sessions/' + id + '/terminate', { method: 'POST' });
+                fetchSessions();
+            } catch (e) {
+                alert('Error terminating session');
+            }
+        }
+
+        async function terminateAllSessions() {
+            if (!confirm('Terminate all sessions?')) return;
+            try {
+                await fetch('/api/sessions/terminate-all', { method: 'POST' });
+                fetchSessions();
+            } catch (e) {
+                alert('Error terminating sessions');
+            }
+        }
+
+        async function fetchAuditLog() {
+            try {
+                const response = await fetch('/api/audit');
+                const logs = await response.json();
+                const container = document.getElementById('audit-list');
+                
+                if (logs.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500">No audit logs</p>';
+                    return;
+                }
+
+                let html = '';
+                logs.forEach(l => {
+                    const date = new Date(l.created_at * 1000).toLocaleString();
+                    html += `
+                        <div class="p-3 bg-base rounded-lg border border-border">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">${l.action}</span>
+                                <span class="text-xs text-gray-500">${date}</span>
+                            </div>
+                            <div class="text-sm">User: ${l.user} | IP: ${l.ip_address}</div>
+                            <div class="text-xs text-gray-400">${l.details || ''}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Error fetching audit log:', e);
+            }
+        }
+
+        fetchSessions();
+        fetchAuditLog();
+        setInterval(fetchSessions, 10000);
+
         var toggleDark = document.getElementById("theme-dark-toggle");
         var toggleLight = document.getElementById("theme-light-toggle");
 

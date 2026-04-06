@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"imap-sync/config"
 	"imap-sync/internal"
 	"imap-sync/logger"
 
@@ -10,27 +9,21 @@ import (
 
 var log = logger.Log
 
-var (
-	source_server       string
-	source_account      string
-	destination_server  string
-	destination_account string
-)
-
 func HandleRoot(ctx *gin.Context) {
-	source_server = config.Conf.SourceAndDestination.SourceServer
-	source_account = config.Conf.SourceAndDestination.SourceMail
-	destination_server = config.Conf.SourceAndDestination.DestinationServer
-	destination_account = config.Conf.SourceAndDestination.DestinationMail
+	settings, err := internal.GetSettings()
+	if err != nil {
+		log.Error(err)
+		settings = &internal.Settings{}
+	}
 
 	sourceDetails := internal.Credentials{
-		Server:  source_server,
-		Account: source_account,
+		Server:  settings.SourceServer,
+		Account: settings.SourceAccountPrefix,
 	}
 
 	destinationDetails := internal.Credentials{
-		Server:  destination_server,
-		Account: destination_account,
+		Server:  settings.DestinationServer,
+		Account: settings.DestinationAccountPrefix,
 	}
 
 	data := struct {

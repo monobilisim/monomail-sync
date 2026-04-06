@@ -18,6 +18,11 @@ func InitServer() {
 	logger.SetupLogger()
 	err := internal.InitDb()
 	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = internal.InitSettingsTable()
+	if err != nil {
 		log.Error(err)
 	}
 
@@ -38,15 +43,42 @@ func InitServer() {
 	router.GET("/favicon.ico", func(ctx *gin.Context) {
 		ctx.File("favicon.ico")
 	})
+	router.GET("/health", func(ctx *gin.Context) {
+		dbStatus := "healthy"
+		if err := internal.CheckDB(); err != nil {
+			dbStatus = "unhealthy"
+		}
+
+		ctx.JSON(200, gin.H{
+			"status":    "healthy",
+			"version":   "1.0.0",
+			"db_status": dbStatus,
+			"uptime":    internal.GetUptime(),
+		})
+	})
 	go internal.InitQueue()
+
+	authenticatedAPI := router.Group("/api")
+	authenticatedAPI.Use(requireSession())
 	// API endpoints
-	router.GET("/api/queue", controller.HandleQueue)
-	router.GET("/api/queuepoll", controller.HandleQueuePolling)
-	router.GET("/api/pagination", controller.HandlePagination)
-	router.GET("/api/details", controller.HandleGetLog)
-	router.GET("/api/sync", controller.HandleSync)
-	router.POST("/api/validate", controller.HandleValidate)
-	router.POST("/api/search", controller.HandleSearch)
+	authenticatedAPI.GET("/queue", controller.HandleQueue)
+	authenticatedAPI.GET("/queuepoll", controller.HandleQueuePolling)
+	authenticatedAPI.GET("/pagination", controller.HandlePagination)
+	authenticatedAPI.GET("/details", controller.HandleGetLog)
+	authenticatedAPI.GET("/sync", controller.HandleSync)
+	authenticatedAPI.GET("/settings", controller.HandleGetSettings)
+	authenticatedAPI.PUT("/settings", controller.HandleUpdateSettings)
+	authenticatedAPI.POST("/bulk", controller.HandleBulkMigration)
+	authenticatedAPI.GET("/bulk/status", controller.HandleBulkMigrationStatus)
+	authenticatedAPI.GET("/stats", controller.HandleGetStats)
+	authenticatedAPI.GET("/system", controller.HandleGetSystemInfo)
+	authenticatedAPI.GET("/audit", controller.HandleGetAuditLog)
+	authenticatedAPI.GET("/sessions", controller.HandleGetSessions)
+	authenticatedAPI.POST("/sessions/:id/terminate", controller.HandleTerminateSession)
+	authenticatedAPI.POST("/sessions/terminate-all", controller.HandleTerminateAllSessions)
+	authenticatedAPI.POST("/validate", controller.HandleValidate)
+	authenticatedAPI.POST("/search", controller.HandleSearch)
+
 	router.POST("/auth/login", controller.Login)
 
 	log.Info("Server starting on http://localhost:" + port)

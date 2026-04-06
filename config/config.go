@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"imap-sync/logger"
 	"os"
 
@@ -37,24 +36,43 @@ type Config struct {
 }
 
 var Conf Config
+var configFilePath string
+
+func SetConfigPath(path string) {
+	configFilePath = path
+}
 
 func ParseConfig() {
-	filePath := flag.String("config", "/etc/monomail-sync.yml", "Path of the configuration file in YAML format")
-	flag.Parse()
-
-	if _, err := os.Stat(*filePath); os.IsNotExist(err) {
-		log.Fatalf("Configuration file: %s does not exist, %v\n", *filePath, err)
+	if configFilePath == "" {
+		configFilePath = "/etc/monomail-sync.yml"
 	}
 
-	viper.SetConfigFile(*filePath)
+	setDefaults()
+
+	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+		log.Warnf("Config file not found, using defaults: %v", err)
+		return
+	}
+
+	viper.SetConfigFile(configFilePath)
 	viper.SetConfigType("yaml")
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file, %s\n", err)
+		log.Warnf("Error reading config file, using defaults: %v", err)
+		return
 	}
 
-	err := viper.Unmarshal(&Conf)
-	if err != nil {
-		log.Fatalf("Unable to decode into struct, %v\n", err)
-	}
+	viper.Unmarshal(&Conf)
+}
+
+func setDefaults() {
+	Conf.Language = "en"
+	Conf.Port = "8000"
+	Conf.DatabaseInfo.AdminName = "admin"
+	Conf.DatabaseInfo.AdminPass = "admin"
+	Conf.DatabaseInfo.DatabasePath = "./db.db"
+	Conf.SourceAndDestination.SourceServer = "imap.example.com"
+	Conf.SourceAndDestination.SourceMail = "@example.com"
+	Conf.SourceAndDestination.DestinationServer = "imap.example.com"
+	Conf.SourceAndDestination.DestinationMail = "@example.com"
 }

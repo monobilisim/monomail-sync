@@ -13,14 +13,17 @@ func HandleValidate(ctx *gin.Context) {
 
 	var SServer, SAccount, SPassword string
 	var DServer, DAccount, DPassword string
+	var SUseTLS, DUseTLS bool
 
 	if validate != "" {
 		SServer = ctx.PostForm("source_server")
 		SAccount = ctx.PostForm("source_account")
 		SPassword = ctx.PostForm("source_password")
+		SUseTLS = ctx.PostForm("source_use_tls") == "on"
 		DServer = ctx.PostForm("destination_server")
 		DAccount = ctx.PostForm("destination_account")
 		DPassword = ctx.PostForm("destination_password")
+		DUseTLS = ctx.PostForm("destination_use_tls") == "on"
 	}
 
 	if validate == "" && submitsync != "" {
@@ -37,7 +40,7 @@ func HandleValidate(ctx *gin.Context) {
 
 	log.Infof("Validating credentials for: %s", creds.Account)
 
-	err := internal.ValidateCredentials(creds)
+	err := internal.ValidateCredentials(creds, SUseTLS)
 	if err != nil {
 		ctx.HTML(200, "error.html", "Couldn't verify for user: "+SAccount)
 		return
@@ -52,7 +55,7 @@ func HandleValidate(ctx *gin.Context) {
 
 	log.Infof("Validating credentials for: %s", creds.Account)
 
-	err = internal.ValidateCredentials(creds)
+	err = internal.ValidateCredentials(creds, DUseTLS)
 	if err != nil {
 		ctx.HTML(200, "error.html", "Couldn't verify for user: "+DAccount)
 		return

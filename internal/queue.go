@@ -56,6 +56,10 @@ func InitQueue() {
 	processPendingTasks()
 }
 
+func TaskChan() chan Task {
+	return taskChan
+}
+
 func AddTask(sourceDetails, destinationDetails Credentials) {
 	task := &Task{
 		ID:                  queue.Len() + 1,
@@ -68,8 +72,12 @@ func AddTask(sourceDetails, destinationDetails Credentials) {
 		Status:              "Pending",
 	}
 
+	if err := AddTaskToDB(task); err != nil {
+		log.Errorf("Failed to persist task: %v", err)
+		return
+	}
+
 	queue.PushFront(task)
-	AddTaskToDB(task)
 	go func() {
 		taskChan <- *task
 	}()
