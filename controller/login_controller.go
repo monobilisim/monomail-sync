@@ -13,7 +13,7 @@ func HandleLogin(ctx *gin.Context) {
 	store := ginsession.FromContext(ctx)
 	_, ok := store.Get("user")
 	if ok {
-		ctx.Redirect(http.StatusMovedPermanently, "/admin")
+		ctx.Redirect(http.StatusMovedPermanently, "/")
 		return
 	}
 	ctx.HTML(200, "login.html", internal.Data["login"])
@@ -47,6 +47,6 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
 	}
-	ctx.Redirect(http.StatusMovedPermanently, "/admin")
+	ctx.Redirect(http.StatusMovedPermanently, "/")
 
 }

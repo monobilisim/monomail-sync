@@ -58,22 +58,34 @@
       </svg>
     </span>
     {{else if eq .Status "In Progress" }}
-    <span class="badge-outline-warning" alt="{{.Status}}" title="{{.Status}}"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
-        />
-      </svg>
-    </span>
+    <div class="flex flex-col gap-1 min-w-[220px]"
+      x-data="taskProgress({{.ID}})" x-init="startPolling()">
+      <div class="flex items-center gap-2">
+        <template x-if="!finished">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-warning animate-spin">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+        </template>
+        <template x-if="finished">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-success">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </template>
+        <span class="text-xs font-semibold" :class="finished ? 'text-success' : 'text-warning'" x-text="percent + '%'">0%</span>
+        <span class="text-[10px] text-gray-400 truncate max-w-[120px]" x-show="folder && !finished" x-text="'[' + folder + ']'"></span>
+        <span class="text-[10px] text-success" x-show="finished">Done</span>
+      </div>
+      <div class="w-full bg-gray-700 rounded-full h-1.5">
+        <div class="h-1.5 rounded-full transition-all duration-700 ease-out"
+          :class="finished ? 'bg-success' : 'bg-warning'"
+          :style="'width:' + percent + '%'"></div>
+      </div>
+      <div class="flex justify-between text-[10px] text-gray-500" x-show="!finished">
+        <span x-text="msgsDone + '/' + msgsTotal + ' msgs'">0/0 msgs</span>
+        <span x-show="speed" x-text="speed"></span>
+        <span x-show="eta > 0" x-text="eta + 's'"></span>
+      </div>
+    </div>
     {{else}}
     <span class="badge-outline-warning" alt="{{.Status}}" title="{{.Status}}"
       ><svg

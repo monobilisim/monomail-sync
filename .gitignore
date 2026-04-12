@@ -1,5 +1,8 @@
 tmp
 imap-sync
+monomail-sync
 LOG_imapsync
 db.db
+logs/
+config/config.yml
 .vscode

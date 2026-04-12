@@ -49,19 +49,19 @@
     <div class="container p-4 mx-auto">
         <div class="flex justify-center">
             <div class="grid grid-cols-5 gap-4 w-full max-w-4xl">
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md cursor-pointer hover:border-gray-400 transition-colors" onclick="filterByStatus('')">
                     <div class="text-gray-500 text-sm text-center">Total Tasks</div>
                     <div class="text-3xl font-bold text-center" id="stat-total">-</div>
                 </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md cursor-pointer hover:border-green-500 transition-colors" onclick="filterByStatus('Done')">
                     <div class="text-gray-500 text-sm text-center">Completed</div>
                     <div class="text-3xl font-bold text-success text-center" id="stat-completed">-</div>
                 </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md cursor-pointer hover:border-red-500 transition-colors" onclick="filterByStatus('Error')">
                     <div class="text-gray-500 text-sm text-center">Failed</div>
                     <div class="text-3xl font-bold text-error text-center" id="stat-failed">-</div>
                 </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md">
+                <div class="bg-backgroundSecondary border border-border rounded-lg p-4 shadow-md cursor-pointer hover:border-yellow-500 transition-colors" onclick="filterByStatus('In Progress')">
                     <div class="text-gray-500 text-sm text-center">In Progress</div>
                     <div class="text-3xl font-bold text-warning text-center" id="stat-in-progress">-</div>
                 </div>
@@ -176,7 +176,7 @@
     <!-- Table for showing the queue -->
     <div class="container p-4 mx-auto flex gap-4">
         <div class=" flex w-full overflow-x-auto flex-col">
-            <h2 class="text-4xl m-2">{{index . "queue"}}</h2>
+            <h2 class="text-4xl m-2">{{index .Data "queue"}}</h2>
 
             <!-- Page controls -->
             <div id="pagination" class="pagination m-2" hx-get="/api/pagination?page=1" hx-trigger="load"></div>
@@ -185,18 +185,17 @@
                 hx-target="#table-body" hx-swap-oob="innerHTML transition:true">
                 <thead>
                     <tr>
-                        <th>{{index . "index"}}</th>
-                        <th>{{index . "source_server"}}</th>
-                        <th>{{index . "source_account"}}</th>
-                        <th>{{index . "dest_server"}}</th>
-                        <th>{{index . "dest_account"}}</th>
-                        <th>{{index . "status"}}</th>
-                        <th>{{index . "actions"}}</th>
+                        <th>{{index .Data "index"}}</th>
+                        <th>{{index .Data "source_server"}}</th>
+                        <th>{{index .Data "source_account"}}</th>
+                        <th>{{index .Data "dest_server"}}</th>
+                        <th>{{index .Data "dest_account"}}</th>
+                        <th>{{index .Data "status"}}</th>
+                        <th>{{index .Data "actions"}}</th>
                     </tr>
                 </thead>
-                <tbody id="table-body" hx-boost="true" hx-get="/api/queue?page={{if .Index}}{{.Index}}{{else}}1{{end}}"
+                <tbody id="table-body" hx-boost="true" hx-get="/api/queue?page=1"
                     hx-swap="innerHTML transition:true" hx-trigger="every 2s">
-                    {{template "tbody.html" .}}
                 </tbody>
             </table>
         </div>
@@ -503,6 +502,21 @@
 
         var searchInput = document.getElementById("search-input");
 
+        function filterByStatus(status) {
+            var searchInput = document.getElementById("search-input");
+            var table = document.getElementById("table-body");
+            if (status) {
+                searchInput.value = status;
+                table.removeAttribute("hx-trigger");
+                htmx.ajax('POST', '/api/search?page=1&exact=false', {target: '#table-body', swap: 'innerHTML transition:true', values: {'search-input': status}});
+                htmx.process(table);
+            } else {
+                searchInput.value = '';
+                table.setAttribute("hx-trigger", "every 2s");
+                htmx.process(table);
+            }
+        }
+
         function updateHxTrigger() {
             var table = document.getElementById("table-body");
             if (searchInput.value) {
@@ -534,6 +548,45 @@
         });
 
 
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('taskProgress', (taskId) => ({
+                percent: 0,
+                folder: '',
+                msgsDone: 0,
+                msgsTotal: 0,
+                speed: '',
+                eta: 0,
+                finished: false,
+                _interval: null,
+
+                startPolling() {
+                    this.fetchProgress();
+                    this._interval = setInterval(() => this.fetchProgress(), 2000);
+                },
+
+                async fetchProgress() {
+                    try {
+                        const res = await fetch('/api/task/progress?id=' + taskId);
+                        const d = await res.json();
+                        if (!d.active) {
+                            clearInterval(this._interval);
+                            this.percent = 100;
+                            this.finished = true;
+                            fetchStats();
+                            return;
+                        }
+                        this.percent = d.percent || 0;
+                        this.folder = d.current_folder || '';
+                        this.msgsDone = d.msgs_done || 0;
+                        this.msgsTotal = d.msgs_total || 0;
+                        this.speed = d.speed || '';
+                        this.eta = d.eta_seconds || 0;
+                    } catch(e) {}
+                },
+
+                destroy() { clearInterval(this._interval); }
+            }));
+        });
     </script>
 
 </body>

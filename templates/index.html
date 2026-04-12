@@ -69,22 +69,22 @@
     <div class="container px-4 mt-4">
         <div class="flex justify-end">
             <div class="grid grid-cols-5 gap-4 w-full max-w-4xl">
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                <a href="/admin" class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center cursor-pointer hover:border-gray-400 transition-colors">
                     <div class="text-gray-500 text-xs">Total</div>
                     <div class="text-2xl font-bold" id="stat-total">0</div>
-                </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                </a>
+                <a href="/admin" class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center cursor-pointer hover:border-green-500 transition-colors">
                     <div class="text-gray-500 text-xs">Completed</div>
                     <div class="text-2xl font-bold text-success" id="stat-completed">0</div>
-                </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                </a>
+                <a href="/admin" class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center cursor-pointer hover:border-red-500 transition-colors">
                     <div class="text-gray-500 text-xs">Failed</div>
                     <div class="text-2xl font-bold text-error" id="stat-failed">0</div>
-                </div>
-                <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
+                </a>
+                <a href="/admin" class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center cursor-pointer hover:border-yellow-500 transition-colors">
                     <div class="text-gray-500 text-xs">In Progress</div>
                     <div class="text-2xl font-bold text-warning" id="stat-in-progress">0</div>
-                </div>
+                </a>
                 <div class="bg-backgroundSecondary border border-border rounded-lg p-3 text-center">
                     <div class="text-gray-500 text-xs">Success</div>
                     <div class="text-2xl font-bold text-info" id="stat-success-rate">0%</div>
@@ -168,7 +168,7 @@
             />
           </div>
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="source_use_tls" class="checkbox" x-model="source_use_tls">
+            <input type="checkbox" id="source_use_tls" name="source_use_tls" class="checkbox" x-model="source_use_tls">
             <label for="source_use_tls">Use TLS/SSL</label>
           </div>
         </div>
@@ -233,7 +233,7 @@
             />
           </div>
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="destination_use_tls" class="checkbox" x-model="destination_use_tls">
+            <input type="checkbox" id="destination_use_tls" name="destination_use_tls" class="checkbox" x-model="destination_use_tls">
             <label for="destination_use_tls">Use TLS/SSL</label>
           </div>
         </div>
@@ -246,6 +246,109 @@
       :class="model_open ? 'visible opacity-100' : '' "
     >
       {{ template "log_window.html"}}
+    </div>
+
+    <div class="container px-4 mt-4 mx-auto" x-show="syncMessage" x-cloak x-transition>
+      <div class="alert alert-success">
+        <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span class="font-medium" x-text="syncMessage"></span>
+      </div>
+    </div>
+
+    <!-- Validation Status Panel -->
+    <div class="container px-4 mt-4 mx-auto" x-show="validation.visible" x-cloak>
+      <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg space-y-2">
+        <!-- Source Step -->
+        <div class="flex items-center gap-3 p-3 rounded-lg border transition-all duration-300"
+          :class="validation.source.status === 'loading' ? 'border-blue-400 bg-blue-500/10' :
+                  validation.source.status === 'success' ? 'border-green-400 bg-green-500/10' :
+                  validation.source.status === 'error' ? 'border-red-400 bg-red-500/10' : 'border-border'">
+          <div x-show="validation.source.status === 'loading'" class="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <svg x-show="validation.source.status === 'success'" class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <svg x-show="validation.source.status === 'error'" class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <div x-show="validation.source.status === 'idle' || validation.source.status === 'skipped'" class="h-5 w-5 border-2 border-gray-400 rounded-full flex-shrink-0"></div>
+          <span class="font-medium" x-text="validation.source.message"
+            :class="validation.source.status === 'loading' ? 'text-blue-500' :
+                    validation.source.status === 'success' ? 'text-green-500' :
+                    validation.source.status === 'error' ? 'text-red-500' : 'text-gray-400'"></span>
+        </div>
+        <!-- Destination Step -->
+        <div class="flex items-center gap-3 p-3 rounded-lg border transition-all duration-300"
+          :class="validation.destination.status === 'loading' ? 'border-blue-400 bg-blue-500/10' :
+                  validation.destination.status === 'success' ? 'border-green-400 bg-green-500/10' :
+                  validation.destination.status === 'error' ? 'border-red-400 bg-red-500/10' : 'border-border'">
+          <div x-show="validation.destination.status === 'loading'" class="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <svg x-show="validation.destination.status === 'success'" class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <svg x-show="validation.destination.status === 'error'" class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <div x-show="validation.destination.status === 'idle' || validation.destination.status === 'skipped'" class="h-5 w-5 border-2 border-gray-400 rounded-full flex-shrink-0"></div>
+          <span class="font-medium" x-text="validation.destination.message"
+            :class="validation.destination.status === 'loading' ? 'text-blue-500' :
+                    validation.destination.status === 'success' ? 'text-green-500' :
+                    validation.destination.status === 'error' ? 'text-red-500' : 'text-gray-400'"></span>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg border transition-all duration-300" x-show="validation.stats.status !== 'idle'"
+          :class="validation.stats.status === 'loading' ? 'border-blue-400 bg-blue-500/10' :
+                  validation.stats.status === 'success' ? 'border-green-400 bg-green-500/10' :
+                  validation.stats.status === 'error' ? 'border-red-400 bg-red-500/10' : 'border-border'">
+          <div x-show="validation.stats.status === 'loading'" class="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <svg x-show="validation.stats.status === 'success'" class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <svg x-show="validation.stats.status === 'error'" class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <span class="font-medium" x-text="validation.stats.message"
+            :class="validation.stats.status === 'loading' ? 'text-blue-500' :
+                    validation.stats.status === 'success' ? 'text-green-500' :
+                    validation.stats.status === 'error' ? 'text-red-500' : 'text-gray-400'"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container px-4 mt-4 mx-auto" x-show="mailboxComparison" x-cloak>
+      <div class="w-full bg-backgroundSecondary p-4 shadow-md border border-border rounded-lg overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr>
+              <th>{{index .Validation "folder"}}</th>
+              <th class="text-right">{{index .Validation "source_count"}}</th>
+              <th class="text-right">{{index .Validation "source_size"}}</th>
+              <th class="text-right">{{index .Validation "dest_count"}}</th>
+              <th class="text-right">{{index .Validation "dest_size"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="row in mailboxComparison?.rows || []" :key="row.name">
+              <tr>
+                <td class="font-mono text-sm" x-text="row.name"></td>
+                <td class="text-right" x-text="row.src_messages"></td>
+                <td class="text-right" x-text="row.src_size.toFixed(2) + ' MB'"></td>
+                <td class="text-right" x-text="row.dst_messages"></td>
+                <td class="text-right" x-text="row.dst_size.toFixed(2) + ' MB'"></td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr class="font-bold border-t-2 border-border">
+              <td>{{index .Validation "total"}}</td>
+              <td class="text-right" x-text="mailboxComparison?.source_total_messages || 0"></td>
+              <td class="text-right" x-text="(mailboxComparison?.source_total_size || 0).toFixed(2) + ' MB'"></td>
+              <td class="text-right" x-text="mailboxComparison?.dest_total_messages || 0"></td>
+              <td class="text-right" x-text="(mailboxComparison?.dest_total_size || 0).toFixed(2) + ' MB'"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
 
     <!-- Log output -->
@@ -281,16 +384,28 @@
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-semibold">{{index .Text "user_queue"}}</h2>
           <div x-show="!validated">
-            <input type="submit" class="bg-blue-500 hover:bg-blue-700
-            font-semibold text-white p-2 px-6 rounded-lg" name="validate"
-            type="submit" value={{index .Text "validate"}}
-            form="credentials_form" />
+            <button type="button" @click="validateCredentials()"
+              class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="validation.inProgress">
+              <span x-show="!validation.inProgress">{{index .Text "validate"}}</span>
+              <span x-show="validation.inProgress" class="flex items-center gap-2">
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                ...
+              </span>
+            </button>
           </div>
-          <div x-show="validated">
-            <input type="submit" class="bg-blue-500 hover:bg-blue-700
-            font-semibold text-white p-2 rounded-lg" id="start-sync-btn"
-            name="submit_sync" value={{index .Text "sync"}}
-            form="credentials_form" />
+          <div x-show="validated" class="flex gap-2">
+            <button type="button" @click="submitSync()"
+              class="bg-blue-500 hover:bg-blue-700 font-semibold text-white p-2 px-4 rounded-lg">
+              {{index .Text "sync"}}
+            </button>
+            <button type="button" @click="resetForm()"
+              class="bg-gray-500 hover:bg-gray-600 font-semibold text-white p-2 px-4 rounded-lg">
+              {{index .Validation "reset"}}
+            </button>
           </div>
         </div>
         <div class="grid gap-4" x-show="validated">
@@ -388,8 +503,140 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
       </div>
     </div>
 
+    <!-- Activity Log Panel -->
+    <div class="fixed bottom-0 left-0 right-0 z-40 transition-all duration-300"
+      :class="activityLogOpen ? 'h-72' : 'h-10'"
+      x-show="activityLog.length > 0 || currentMigrationId"
+      x-cloak
+      x-transition>
+      <!-- Toggle Bar -->
+      <div class="bg-backgroundSecondary border-t border-border px-4 h-10 flex items-center justify-between cursor-pointer select-none"
+        @click="activityLogOpen = !activityLogOpen">
+        <div class="flex items-center gap-2">
+          <div class="relative flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span x-show="activityHasRunning" class="absolute -top-1 -right-1 flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+          </div>
+          <span class="font-semibold text-sm">{{index .Validation "activity_log"}}</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700" x-text="activityLog.length"></span>
+          <!-- Inline latest event preview when collapsed -->
+          <span x-show="!activityLogOpen && activityLog.length > 0" class="text-xs text-gray-500 ml-2 truncate max-w-md"
+            x-text="activityLog[activityLog.length - 1]?.source + ' → ' + activityLog[activityLog.length - 1]?.destination + ' — ' + activityLog[activityLog.length - 1]?.message">
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button @click.stop="activityLog = []; activityPrevStates = {}" class="text-xs text-gray-400 hover:text-gray-600 px-2 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
+            {{index .Validation "activity_clear"}}
+          </button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 transition-transform" :class="activityLogOpen ? '' : 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+      <!-- Log Content -->
+      <div x-show="activityLogOpen" class="bg-backgroundSecondary border-t border-border overflow-hidden" style="height: calc(100% - 2.5rem);">
+        <div class="h-full overflow-y-auto px-4 py-2 space-y-1 font-mono text-xs" id="activity-log-scroll"
+          x-ref="activityLogScroll">
+          <template x-if="activityLog.length === 0">
+            <p class="text-gray-400 text-center py-8">{{index .Validation "activity_no_events"}}</p>
+          </template>
+          <template x-for="(entry, idx) in activityLog" :key="idx">
+            <div class="flex items-start gap-2 py-1 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+              :class="entry.status === 'completed' ? 'border-l-2 border-green-500' :
+                      entry.status === 'failed' ? 'border-l-2 border-red-500' :
+                      entry.status === 'syncing' ? 'border-l-2 border-blue-500' :
+                      entry.status === 'validating' ? 'border-l-2 border-yellow-500' : 'border-l-2 border-gray-300'">
+              <!-- Status icon -->
+              <div class="flex-shrink-0 mt-0.5">
+                <template x-if="entry.status === 'completed'">
+                  <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                </template>
+                <template x-if="entry.status === 'failed'">
+                  <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </template>
+                <template x-if="entry.status === 'syncing'">
+                  <svg class="w-3.5 h-3.5 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                </template>
+                <template x-if="entry.status === 'validating'">
+                  <svg class="w-3.5 h-3.5 text-yellow-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </template>
+                <template x-if="entry.status === 'pending'">
+                  <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </template>
+              </div>
+              <!-- Timestamp -->
+              <span class="text-gray-400 flex-shrink-0" x-text="entry.time"></span>
+              <!-- Account info -->
+              <span class="text-gray-300 flex-shrink-0">|</span>
+              <span class="font-medium truncate" x-text="entry.source"></span>
+              <span class="text-gray-400 flex-shrink-0">→</span>
+              <span class="font-medium truncate" x-text="entry.destination"></span>
+              <span class="text-gray-300 flex-shrink-0">—</span>
+              <!-- Status message -->
+              <span :class="entry.status === 'completed' ? 'text-green-500' :
+                           entry.status === 'failed' ? 'text-red-500' :
+                           entry.status === 'syncing' ? 'text-blue-500' :
+                           entry.status === 'validating' ? 'text-yellow-500' : 'text-gray-400'"
+                x-text="entry.message"></span>
+              <!-- Error detail -->
+              <span x-show="entry.error" class="text-red-400 truncate" x-text="entry.error ? '(' + entry.error + ')' : ''"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container for per-account notifications -->
+    <div class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none" style="max-width: 400px;">
+      <template x-for="(toast, idx) in toasts" :key="toast.id">
+        <div class="pointer-events-auto transform transition-all duration-300 ease-out"
+          x-show="toast.visible"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 translate-x-8"
+          x-transition:enter-end="opacity-100 translate-x-0"
+          x-transition:leave="transition ease-in duration-200"
+          x-transition:leave-start="opacity-100 translate-x-0"
+          x-transition:leave-end="opacity-0 translate-x-8"
+          @click="removeToast(toast.id)">
+          <div class="rounded-lg shadow-lg border px-4 py-3 flex items-start gap-3 cursor-pointer"
+            :class="toast.type === 'success' ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800' :
+                    toast.type === 'error' ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800' :
+                    'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800'">
+            <div class="flex-shrink-0 mt-0.5">
+              <template x-if="toast.type === 'success'">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              </template>
+              <template x-if="toast.type === 'error'">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </template>
+              <template x-if="toast.type === 'info'">
+                <svg class="w-5 h-5 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+              </template>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-medium"
+                :class="toast.type === 'success' ? 'text-green-800 dark:text-green-200' :
+                        toast.type === 'error' ? 'text-red-800 dark:text-red-200' :
+                        'text-blue-800 dark:text-blue-200'"
+                x-text="toast.title"></p>
+              <p class="text-xs mt-0.5 truncate"
+                :class="toast.type === 'success' ? 'text-green-600 dark:text-green-400' :
+                        toast.type === 'error' ? 'text-red-600 dark:text-red-400' :
+                        'text-blue-600 dark:text-blue-400'"
+                x-text="toast.body"></p>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
     <!-- Footer -->
-    <div class="container mx-auto flex justify-center p-4">
+    <div class="container mx-auto flex justify-center p-4" :class="(activityLog.length > 0 || currentMigrationId) ? 'mb-72' : ''">
       <p class="text-center text-gray-500 dark:text-gray-400">imapsync-web</p>
     </div>
 
@@ -465,7 +712,13 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
           const data = await response.json();
           if (response.ok) {
             document.getElementById('bulk-migration-form').reset();
-            window.location.reload();
+            const alpineData = Alpine.$data(document.querySelector('[x-data="data"]'));
+            if (alpineData) {
+              alpineData.currentMigrationId = data.migration_id;
+              alpineData.showMigrationPanel = true;
+              alpineData.activityLogOpen = true;
+              alpineData.startMigrationPolling();
+            }
           } else {
             alert('Error: ' + data.error);
           }
@@ -545,6 +798,48 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
           migrationInterval: null,
           migrations: [],
 
+          activityLog: [],
+          activityLogOpen: false,
+          activityPrevStates: {},
+          activityHasRunning: false,
+          toasts: [],
+          toastCounter: 0,
+
+          validation: {
+            visible: false,
+            inProgress: false,
+            source: { status: 'idle', message: '' },
+            destination: { status: 'idle', message: '' },
+            stats: { status: 'idle', message: '' },
+          },
+
+          mailboxComparison: null,
+
+          vmsg: {
+            source_connecting: "{{index .Validation "source_connecting"}}",
+            source_success: "{{index .Validation "source_success"}}",
+            dest_connecting: "{{index .Validation "dest_connecting"}}",
+            dest_success: "{{index .Validation "dest_success"}}",
+            dest_waiting: "{{index .Validation "dest_waiting"}}",
+            dest_skipped: "{{index .Validation "dest_skipped"}}",
+            connection_failed: "{{index .Validation "connection_failed"}}",
+            auth_failed: "{{index .Validation "auth_failed"}}",
+            missing_field: "{{index .Validation "missing_field"}}",
+            source_label: "{{index .Validation "source_label"}}",
+            dest_label: "{{index .Validation "dest_label"}}",
+            stats_loading: "{{index .Validation "stats_loading"}}",
+            stats_success: "{{index .Validation "stats_success"}}",
+            stats_error: "{{index .Validation "stats_error"}}",
+            sync_added: "{{index .Validation "sync_added"}}",
+            activity_validating: "{{index .Validation "activity_validating"}}",
+            activity_syncing: "{{index .Validation "activity_syncing"}}",
+            activity_completed: "{{index .Validation "activity_completed"}}",
+            activity_failed: "{{index .Validation "activity_failed"}}",
+            activity_pending: "{{index .Validation "activity_pending"}}",
+          },
+
+          syncMessage: null,
+
           providers: {
             "Custom": { host: "", port: 993, useTLS: false },
             "Gmail": { host: "imap.gmail.com", port: 993, useTLS: true },
@@ -578,6 +873,170 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
               this.destination_server = provider.host + ":" + provider.port;
               this.destination_use_tls = provider.useTLS;
             }
+          },
+
+          async validateCredentials() {
+            this.validation.visible = true;
+            this.validation.inProgress = true;
+            this.validated = false;
+            this.mailboxComparison = null;
+            this.validation.source = { status: 'loading', message: this.vmsg.source_connecting };
+            this.validation.destination = { status: 'idle', message: this.vmsg.dest_waiting };
+            this.validation.stats = { status: 'idle', message: '' };
+
+            const formData = new FormData(document.getElementById('credentials_form'));
+
+            try {
+              const res = await fetch('/api/validate/step?side=source', { method: 'POST', body: formData });
+              const data = await res.json();
+
+              if (data.success) {
+                this.validation.source = { status: 'success', message: this.vmsg.source_success };
+              } else {
+                let msg = this.vmsg.source_label + ': ';
+                if (data.error_type === 'connection') msg += this.vmsg.connection_failed;
+                else if (data.error_type === 'auth') msg += this.vmsg.auth_failed;
+                else if (data.error_type === 'missing') msg += this.vmsg.missing_field;
+                else msg += data.message;
+
+                this.validation.source = { status: 'error', message: msg };
+                this.validation.destination = { status: 'skipped', message: this.vmsg.dest_skipped };
+                this.validation.inProgress = false;
+                return;
+              }
+            } catch (e) {
+              this.validation.source = { status: 'error', message: this.vmsg.source_label + ': ' + e.message };
+              this.validation.destination = { status: 'skipped', message: this.vmsg.dest_skipped };
+              this.validation.inProgress = false;
+              return;
+            }
+
+            this.validation.destination = { status: 'loading', message: this.vmsg.dest_connecting };
+
+            try {
+              const res = await fetch('/api/validate/step?side=destination', { method: 'POST', body: formData });
+              const data = await res.json();
+
+              if (data.success) {
+                this.validation.destination = { status: 'success', message: this.vmsg.dest_success };
+              } else {
+                let msg = this.vmsg.dest_label + ': ';
+                if (data.error_type === 'connection') msg += this.vmsg.connection_failed;
+                else if (data.error_type === 'auth') msg += this.vmsg.auth_failed;
+                else if (data.error_type === 'missing') msg += this.vmsg.missing_field;
+                else msg += data.message;
+
+                this.validation.destination = { status: 'error', message: msg };
+                this.validation.inProgress = false;
+                return;
+              }
+            } catch (e) {
+              this.validation.destination = { status: 'error', message: this.vmsg.dest_label + ': ' + e.message };
+              this.validation.inProgress = false;
+              return;
+            }
+
+            this.validation.stats = { status: 'loading', message: this.vmsg.stats_loading };
+
+            try {
+              const res = await fetch('/api/validate/stats', { method: 'POST', body: formData });
+              const data = await res.json();
+              this.computeComparison(data);
+              this.validation.stats = { status: 'success', message: this.vmsg.stats_success };
+              this.validated = true;
+              this.showQueue();
+            } catch (e) {
+              this.validation.stats = { status: 'error', message: this.vmsg.stats_error };
+              this.validated = true;
+              this.showQueue();
+            }
+
+            this.validation.inProgress = false;
+          },
+
+          computeComparison(data) {
+            const srcBoxes = data.source?.mailboxes || [];
+            const dstBoxes = data.destination?.mailboxes || [];
+            const map = {};
+
+            srcBoxes.forEach(mb => {
+              map[mb.name] = { name: mb.name, src_messages: mb.messages, src_size: mb.size_mb, dst_messages: 0, dst_size: 0 };
+            });
+            dstBoxes.forEach(mb => {
+              if (map[mb.name]) {
+                map[mb.name].dst_messages = mb.messages;
+                map[mb.name].dst_size = mb.size_mb;
+              } else {
+                map[mb.name] = { name: mb.name, src_messages: 0, src_size: 0, dst_messages: mb.messages, dst_size: mb.size_mb };
+              }
+            });
+
+            this.mailboxComparison = {
+              rows: Object.values(map),
+              source_total_messages: data.source?.total_messages || 0,
+              source_total_size: data.source?.total_size_mb || 0,
+              dest_total_messages: data.destination?.total_messages || 0,
+              dest_total_size: data.destination?.total_size_mb || 0,
+            };
+          },
+
+          async refreshComparison() {
+            if (!this.validated) return;
+            const formData = new FormData(document.getElementById('credentials_form'));
+            try {
+              const res = await fetch('/api/validate/stats', { method: 'POST', body: formData });
+              const data = await res.json();
+              this.computeComparison(data);
+            } catch (e) {}
+          },
+
+          async submitSync() {
+            const formData = new FormData(document.getElementById('credentials_form'));
+            formData.append('submit_sync', 'start');
+
+            try {
+              const res = await fetch('/api/validate', { method: 'POST', body: formData });
+              if (res.ok) {
+                this.syncMessage = this.vmsg.sync_added;
+                setTimeout(() => { this.syncMessage = null; }, 4000);
+                this.showQueue();
+                this.watchForCompletion();
+              }
+            } catch (e) {
+              console.error('Sync error:', e);
+            }
+          },
+
+          watchForCompletion() {
+            if (this._watchInterval) clearInterval(this._watchInterval);
+            this._watchInterval = setInterval(async () => {
+              try {
+                const res = await fetch('/api/stats');
+                const stats = await res.json();
+                if ((stats.in_progress_tasks || 0) === 0) {
+                  clearInterval(this._watchInterval);
+                  this._watchInterval = null;
+                  this.refreshComparison();
+                  this.fetchStats();
+                }
+              } catch(e) {}
+            }, 3000);
+          },
+
+          resetForm() {
+            this.validated = false;
+            this.validation = {
+              visible: false,
+              inProgress: false,
+              source: { status: 'idle', message: '' },
+              destination: { status: 'idle', message: '' },
+              stats: { status: 'idle', message: '' },
+            };
+            this.mailboxComparison = null;
+            document.getElementById('source_account').value = '';
+            document.getElementById('source_password').value = '';
+            document.getElementById('destination_account').value = '';
+            document.getElementById('destination_password').value = '';
           },
 
           showQueue() {
@@ -659,6 +1118,7 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
                 this.currentMigrationId = data.migration_id;
                 this.showMigrationPanel = true;
                 this.showBulkModal = false;
+                this.activityLogOpen = true;
                 this.startMigrationPolling();
                 this.fetchAllMigrations();
               } else {
@@ -703,9 +1163,79 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
             }
           },
 
+          addActivityEntry(source, destination, status, message, error) {
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            this.activityLog.push({ time, source, destination, status, message, error: error || '' });
+            this.$nextTick(() => {
+              const el = this.$refs.activityLogScroll;
+              if (el) el.scrollTop = el.scrollHeight;
+            });
+          },
+
+          getStatusMessage(status) {
+            switch(status) {
+              case 'validating': return this.vmsg.activity_validating;
+              case 'syncing': return this.vmsg.activity_syncing;
+              case 'completed': return this.vmsg.activity_completed;
+              case 'failed': return this.vmsg.activity_failed;
+              case 'pending': return this.vmsg.activity_pending;
+              default: return status;
+            }
+          },
+
+          addToast(type, title, body) {
+            const id = ++this.toastCounter;
+            this.toasts.push({ id, type, title, body, visible: true });
+            setTimeout(() => this.removeToast(id), 5000);
+          },
+
+          removeToast(id) {
+            const toast = this.toasts.find(t => t.id === id);
+            if (toast) toast.visible = false;
+            setTimeout(() => {
+              this.toasts = this.toasts.filter(t => t.id !== id);
+            }, 300);
+          },
+
+          trackStatusChanges(accounts) {
+            let hasRunning = false;
+
+            accounts.forEach((account) => {
+              const key = account.source_user + '>' + account.destination_user;
+              const prev = this.activityPrevStates[key];
+
+              if (account.status === 'syncing' || account.status === 'validating') {
+                hasRunning = true;
+              }
+
+              if (prev === account.status) return;
+
+              this.activityPrevStates[key] = account.status;
+
+              this.addActivityEntry(
+                account.source_user,
+                account.destination_user,
+                account.status,
+                this.getStatusMessage(account.status),
+                account.error
+              );
+
+              if (account.status === 'completed') {
+                this.addToast('success', this.vmsg.activity_completed, account.source_user + ' → ' + account.destination_user);
+              } else if (account.status === 'failed') {
+                this.addToast('error', this.vmsg.activity_failed, account.source_user + ': ' + (account.error || ''));
+              }
+            });
+
+            this.activityHasRunning = hasRunning;
+          },
+
           renderBulkProgress(data) {
             const container = document.getElementById('bulk-progress-container');
             if (!container) return;
+
+            this.trackStatusChanges(data.accounts);
 
             let completed = 0;
             let failed = 0;
@@ -772,6 +1302,43 @@ user2@source.com,pass2,user2@dest.com,pass2"></textarea>
               clearInterval(this.migrationInterval);
             }
           },
+        }));
+
+        Alpine.data('taskProgress', (taskId) => ({
+          percent: 0,
+          folder: '',
+          msgsDone: 0,
+          msgsTotal: 0,
+          speed: '',
+          eta: 0,
+          finished: false,
+          _interval: null,
+
+          startPolling() {
+            this.fetchProgress();
+            this._interval = setInterval(() => this.fetchProgress(), 2000);
+          },
+
+          async fetchProgress() {
+            try {
+              const res = await fetch('/api/task/progress?id=' + taskId);
+              const d = await res.json();
+              if (!d.active) {
+                clearInterval(this._interval);
+                this.percent = 100;
+                this.finished = true;
+                return;
+              }
+              this.percent = d.percent || 0;
+              this.folder = d.current_folder || '';
+              this.msgsDone = d.msgs_done || 0;
+              this.msgsTotal = d.msgs_total || 0;
+              this.speed = d.speed || '';
+              this.eta = d.eta_seconds || 0;
+            } catch(e) {}
+          },
+
+          destroy() { clearInterval(this._interval); }
         }));
       });
     </script>

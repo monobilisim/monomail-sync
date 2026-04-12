@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -10,40 +9,6 @@ import (
 	"syscall"
 	"time"
 )
-
-// func syncIMAP( ,details *Task) error {
-
-// 	updateTaskStatus(details, "In Progress")
-
-// 	currentTime := time.Now().Format("2006.01.02_15:04:05")
-
-// 	logname := details.SourceAccount + "_" + details.DestinationAccount + "_" + currentTime + ".log"
-
-// 	cmd := exec.Command("imapsync",
-// 		"--host1", details.SourceServer,
-// 		"--user1", details.SourceAccount,
-// 		"--password1", details.SourcePassword,
-// 		"--host2", details.DestinationServer,
-// 		"--user2", details.DestinationAccount,
-// 		"--password2", details.DestinationPassword,
-// 		"--logfile", logname)
-
-// 	updateTaskLogFile(details, logname)
-// 	var stdBuffer bytes.Buffer
-// 	mw := io.MultiWriter(os.Stdout, &stdBuffer)
-
-// 	cmd.Stdout = mw
-// 	cmd.Stderr = mw
-
-// 	if err := cmd.Run(); err != nil {
-// 		updateTaskStatus(details, "Error")
-// 		return fmt.Errorf("error running imapsync: %w", err)
-// 	}
-
-// 	updateTaskStatus(details, "Done")
-
-// 	return nil
-// }
 
 func syncIMAP(ctx context.Context, details *Task) error {
 	updateTaskStatus(details, "In Progress")
@@ -63,16 +28,20 @@ func syncIMAP(ctx context.Context, details *Task) error {
 		"--logfile", logname)
 
 	updateTaskLogFile(details, logname)
-	var stdBuffer bytes.Buffer
-	mw := io.MultiWriter(os.Stdout, &stdBuffer)
 
-	cmd.Stdout = mw
-	cmd.Stderr = mw
+	stdoutPipe, err := cmd.StdoutPipe()
+	if err != nil {
+		updateTaskStatus(details, "Error")
+		return fmt.Errorf("error creating stdout pipe: %w", err)
+	}
+	cmd.Stderr = cmd.Stdout
 
 	if err := cmd.Start(); err != nil {
 		updateTaskStatus(details, "Error")
 		return fmt.Errorf("error starting imapsync: %w", err)
 	}
+
+	go ParseImapsyncOutput(details.ID, stdoutPipe, io.Writer(os.Stdout))
 
 	done := make(chan error, 1)
 	go func() {
@@ -85,12 +54,13 @@ func syncIMAP(ctx context.Context, details *Task) error {
 			return fmt.Errorf("failed to terminate imapsync process: %w", err)
 		}
 		updateTaskStatus(details, "Cancelled")
+		DeleteTaskProgress(details.ID)
 		Notify(details, false)
 		return ctx.Err()
 	case err := <-done:
+		DeleteTaskProgress(details.ID)
 		if err != nil {
 			updateTaskStatus(details, "Error")
-
 			Notify(details, false)
 			return fmt.Errorf("error running imapsync: %w", err)
 		}
